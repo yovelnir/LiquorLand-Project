@@ -22,7 +22,7 @@ namespace LiquorLand.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<Users> _signInManager;
         private readonly UserManager<Users> _userManager;
-        private readonly ILogger<LoginModel> _logger;
+        private readonly ILogger<LoginModel> _loggerl;
 
         public LoginModel(SignInManager<Users> signInManager, ILogger<LoginModel> logger, UserManager<Users> userManager)
         {
