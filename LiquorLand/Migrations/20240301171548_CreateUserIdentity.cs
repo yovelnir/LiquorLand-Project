@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LiquorLand.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class CreateUserIdentity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,6 +30,10 @@ namespace LiquorLand.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(100)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(100)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(100)", nullable: true),
+                    PostalCode = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

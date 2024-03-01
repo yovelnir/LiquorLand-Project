@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LiquorLand.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20240229193559_CreateIdentitySchema")]
-    partial class CreateIdentitySchema
+    [Migration("20240301171548_CreateUserIdentity")]
+    partial class CreateUserIdentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,9 +32,18 @@ namespace LiquorLand.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -73,6 +82,9 @@ namespace LiquorLand.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
