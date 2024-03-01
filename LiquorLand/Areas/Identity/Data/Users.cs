@@ -21,5 +21,21 @@ public class Users : IdentityUser
     [Required]
     [Column(TypeName = "nvarchar(100)")]
     public string LastName { get; set; }
+
+    [PersonalData]
+    [Column(TypeName = "nvarchar(100)")]
+    public string Country { get; set; }
+
+    [PersonalData]
+    [Column(TypeName = "nvarchar(100)")]
+    public string City { get; set; }
+
+    [PersonalData]
+    [Column(TypeName = "nvarchar(100)")]
+    public string Address { get; set; }
+
+    [PersonalData]
+    [Column(TypeName = "nvarchar(100)")]
+    public string PostalCode { get; set; }
 }
 
