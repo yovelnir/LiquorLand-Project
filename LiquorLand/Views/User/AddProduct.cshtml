@@ -1,0 +1,66 @@
+﻿@model LiquorLand.Models.Product
+
+@{
+    ViewData["Title"] = "Add New Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddNewProduct">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating">
+                <input asp-for="Serial" type="text" maxlength="5" class="form-control" placeholder="serial"/>
+                <label asp-for="Serial" class="control-label">Product Serial</label>
+                <span asp-validation-for="Serial" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="ProductName" class="form-control" placeholder="name"/>
+                <label asp-for="ProductName" class="control-label">Product Name</label>
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="ProductCategory" class="form-control" placeholder="Category" />
+                <label asp-for="ProductCategory" class="control-label">Product Category</label>
+                <span asp-validation-for="ProductCategory" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="ProductLocation" class="form-control" placeholder="Location" />
+                <label asp-for="ProductLocation" class="control-label">Product Location</label>
+                <span asp-validation-for="ProductLocation" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="ProductPrice" type="number" class="form-control" placeholder="price" />
+                <label asp-for="ProductPrice" class="control-label">Product Price</label>
+                <span asp-validation-for="ProductPrice" class="text-danger"></span>
+            </div>
+            <div class="form-floating">         
+                <input asp-for="ProductSubCategory" class="form-control" placeholder="subCategory" />
+                <label asp-for="ProductSubCategory" class="control-label">Product Sub Category</label>
+                <span asp-validation-for="ProductSubCategory" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="ProductDescription" class="form-control" placeholder="description" />
+                <label asp-for="ProductDescription" class="control-label">Product Description</label>
+                <span asp-validation-for="ProductDescription" class="text-danger"></span>
+            </div>
+            <div class="form-control">
+                <label asp-for="ProductImage" class="control-label">Product Image</label>
+                <input asp-for="ProductImage" type="file" class="form-control" placeholder="image" />
+                <span asp-validation-for="ProductImage" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

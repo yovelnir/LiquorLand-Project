@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - LiquorLand</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sidenav.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/LiquorLand.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -25,12 +26,25 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="AddProduct">Add Product</a>
+                        </li>
                     </ul>
                 </div>
             </div>
             <partial name="_LoginPartial.cshtml" />
         </nav>
     </header>
+@*    <div class="sidebar">
+        <ul class="nav nav-pills flex-column justify-content-center">
+            <li class="nav-item">
+                Add New Product
+            </li>
+            <li class="nav-item">
+                Add New Product
+            </li>
+        </ul>
+    </div>*@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

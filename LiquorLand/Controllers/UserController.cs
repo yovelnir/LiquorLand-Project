@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using LiquorLand.Models;
 
 namespace LiquorLand.Controllers
 {
@@ -6,7 +8,23 @@ namespace LiquorLand.Controllers
     {
         public IActionResult Index()
         {
+            return Redirect("/");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [Route("AddProduct")]
+        public IActionResult AddProduct()
+        {
             return View();
+        }
+
+        public IActionResult AddNewProduct()
+        {
+            if (ModelState.IsValid)
+            {
+                return Redirect("/");
+            }
+            return Redirect("/policy");
         }
     }
 }
