@@ -68,12 +68,5 @@ namespace LiquorLand.Controllers
         {
             return View(view, product);
         }
-
-        public IActionResult ViewProduct()
-        {
-            var product = _productContext.Products.Find("00001");
-            
-            return View(product);
-        }
     }
 }
