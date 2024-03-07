@@ -1,8 +1,42 @@
-﻿@{
+﻿@model LiquorLand.ViewModels.productViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+<style>
+    .custom-img
+    {
+        width:150px;
+        height:200px;
+        object-fit:contain;
+    }
+</style>
+
+<div class="container">
+    <div class="row g-0">
+        @foreach (Product p in Model.all_products)
+        {
+            <div class="col-md-3">
+                @Html.ActionLink("details","productsShow", "Product", p)
+                    <img src="@p.ProductImage" alt="Gallery image" class="img-fluid custom-img" />
+                
+                <div>
+                    <button>buy now</button>
+                    <button>add to cart</button>
+                </div>
+                
+            </div>
+        }
+    </div>
+    
+</div>
+
+
+
+
+
+@* <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+</div> *@
+

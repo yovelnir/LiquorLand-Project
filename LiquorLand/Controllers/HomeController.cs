@@ -1,4 +1,5 @@
 ﻿using LiquorLand.Models;
+using LiquorLand.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -8,15 +9,19 @@ namespace LiquorLand.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ProductContext _productContext;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ProductContext productContext)
         {
             _logger = logger;
+            _productContext = productContext;
         }
 
         public IActionResult Index()
         {
-            return View();
+            productViewModel products = new productViewModel();
+            products.all_products = _productContext.Products.ToList<Product>();
+            return View(products);
         }
 
         [Authorize(Roles = "Admin")]
