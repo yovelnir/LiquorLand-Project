@@ -67,9 +67,27 @@ input[type="number"] {
             </div>
 
             <div class="form-floating mb-1">
+                <input asp-for="Country" class="form-control" placeholder="country"/>
+                <label asp-for="Country" class="control-label">Product Origin Country</label>
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-1">
+                <input asp-for="ProductMaker" class="form-control" placeholder="maker"/>
+                <label asp-for="ProductMaker" class="control-label">Product Manufacturer</label>
+                <span asp-validation-for="ProductMaker" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-1">
                 <input asp-for="Volume" type="number" min="0" step="0.1" class="form-control" placeholder="volume"/>
                 <label asp-for="Volume" class="control-label">Product Liquid Volume</label>
                 <span asp-validation-for="Volume" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-1">
+                <input asp-for="ProductPrice" min="0" step="0.01" type="number" class="form-control" placeholder="price" />
+                <label asp-for="ProductPrice" class="control-label">Product Price</label>
+                <span asp-validation-for="ProductPrice" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-1">
@@ -77,12 +95,6 @@ input[type="number"] {
                 <label asp-for="Stock" class="control-label">Product Stock</label>
                 <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
-
-            <div class="form-floating mb-1">
-                <input asp-for="ProductPrice" min="0" step="0.01" type="number" class="form-control" placeholder="price" />
-                <label asp-for="ProductPrice" class="control-label">Product Price</label>
-                <span asp-validation-for="ProductPrice" class="text-danger"></span>
-            </div> 
             
             <div class="form-floating mb-1">
                 <input asp-for="ProductDescription" class="form-control" placeholder="description" />
