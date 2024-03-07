@@ -18,57 +18,88 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
-
 </style>
+
+
 <h4>Product</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="AddNewProduct" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger">@ViewBag.ErrorMessage</div>
+
             <div class="form-floating mb-1">
-                <input asp-for="Serial" type="text" maxlength="5" class="form-control" placeholder="serial" value="@Model?.Serial"/>
+                <input asp-for="Serial" type="text" maxlength="5" class="form-control" placeholder="serial"/>
                 <label asp-for="Serial" class="control-label">Product Serial</label>
                 <span asp-validation-for="Serial" class="text-danger"></span>
             </div>
+
             <div class="form-floating mb-1">
                 <input asp-for="ProductName" class="form-control" placeholder="name"/>
                 <label asp-for="ProductName" class="control-label">Product Name</label>
                 <span asp-validation-for="ProductName" class="text-danger"></span>
             </div>
+
             <div class="form-floating mb-1">
-                <input asp-for="ProductCategory" class="form-control" placeholder="Category" />
+                <select asp-for="ProductCategory" class="form-select" id="cat">
+                    <option selected disabled>Category</option>
+                    <option value="Wine">Wine</option>
+                    <option value="Beer">Beer</option>
+                    <option value="Whisky">Whisky</option>
+                </select>
                 <label asp-for="ProductCategory" class="control-label">Product Category</label>
                 <span asp-validation-for="ProductCategory" class="text-danger"></span>
             </div>
+
             <div class="form-floating mb-1">
-                <input asp-for="ProductLocation" class="form-control" placeholder="Location" />
-                <label asp-for="ProductLocation" class="control-label">Product Location</label>
-                <span asp-validation-for="ProductLocation" class="text-danger"></span>
+                <select asp-for="ProductSubCategory" class="form-select" id="subcat">
+                    <option selected disabled>Sub Category</option>
+                </select>
+                <label asp-for="ProductSubCategory" class="control-label">Product Sub Category</label>
+                <span asp-validation-for="ProductSubCategory" class="text-danger"></span>
             </div>
+
+            <div class="input-group form-floating mb-1">
+                <input asp-for="AlcoholPercentage" type="number" min="0" step="0.1" class="form-control" placeholder="al%"/>
+                <label asp-for="AlcoholPercentage" class="control-label">Alcohol Percentage</label>
+                <span class="input-group-text" id="basic-addon1">%</span>
+                <span asp-validation-for="AlcoholPercentage" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-1">
+                <input asp-for="Volume" type="number" min="0" step="0.1" class="form-control" placeholder="volume"/>
+                <label asp-for="Volume" class="control-label">Product Liquid Volume</label>
+                <span asp-validation-for="Volume" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-1">
+                <input asp-for="Stock" type="number" min="0" step="1" class="form-control" placeholder="Stock" id="stock"/>
+                <label asp-for="Stock" class="control-label">Product Stock</label>
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+
             <div class="form-floating mb-1">
                 <input asp-for="ProductPrice" min="0" step="0.01" type="number" class="form-control" placeholder="price" />
                 <label asp-for="ProductPrice" class="control-label">Product Price</label>
                 <span asp-validation-for="ProductPrice" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-1">         
-                <input asp-for="ProductSubCategory" class="form-control" placeholder="subCategory" />
-                <label asp-for="ProductSubCategory" class="control-label">Product Sub Category</label>
-                <span asp-validation-for="ProductSubCategory" class="text-danger"></span>
-            </div>
+            </div> 
+            
             <div class="form-floating mb-1">
                 <input asp-for="ProductDescription" class="form-control" placeholder="description" />
                 <label asp-for="ProductDescription" class="control-label">Product Description</label>
                 <span asp-validation-for="ProductDescription" class="text-danger"></span>
             </div>
+
             <div class="form-control">
                 <label asp-for="ProductImage" class="control-label">Product Image</label>
                 <input name="image" accept="image/*" type="file" class="form-control" placeholder="image" id="imgInp" />
                 <span asp-validation-for="ProductImage" class="text-danger"></span>
             </div>
+
             <div class="form-floating mb-1">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
     <div class=col-md-4>
@@ -90,5 +121,36 @@ input[type="number"] {
       if (file) {
         prodimg.src = URL.createObjectURL(file)
       }
+    }
+
+    document.getElementById("cat").addEventListener("change", subcategory)
+    function subcategory(){
+        var category = document.getElementById("cat").value
+        var el = document.getElementById("subcat")
+        el.innerHTML = "<option selected disabled>Sub Category</option>"
+        if(category == "Wine"){
+            console.log('yaopoo')
+            el.innerHTML += "<option value='Red'>Red</option>"
+            el.innerHTML += "<option value='White'>White</option>"
+            el.innerHTML += "<option value='Rose'>Rose</option>"
+            el.innerHTML += "<option value='Sparkling'>Sparkling</option>"
+            el.innerHTML += "<option value='Dessert'>Dessert</option>"
+        }
+        if(category == "Beer"){
+            el.innerHTML += "<option value='Lager'>Lager</option>"
+            el.innerHTML += "<option value='Ale'>Ale</option>"
+            el.innerHTML += "<option value='IPA'>IPA</option>"
+            el.innerHTML += "<option value='Wheat'>Wheat</option>"
+            el.innerHTML += "<option value='Cider'>Cider</option>"
+        }
+        if(category == "Whisky"){
+            el.innerHTML += "<option value='Bourbon'>Bourbon</option>"
+            el.innerHTML += "<option value='Single Malt'>Single Malt</option>"
+            el.innerHTML += "<option value='Blended'>Blended</option>"
+            el.innerHTML += "<option value='American'>American</option>"
+            el.innerHTML += "<option value='Japanese'>Japanese</option>"
+            el.innerHTML += "<option value='Irish'>Irish</option>"
+            el.innerHTML += "<option value='Single Grain'>Single Grain</option>"
+        }
     }
 </script>
