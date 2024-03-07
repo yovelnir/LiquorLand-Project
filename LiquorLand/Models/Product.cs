@@ -17,6 +17,10 @@ namespace LiquorLand.Models
         {
         }
 
+        public ProductContext()
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
