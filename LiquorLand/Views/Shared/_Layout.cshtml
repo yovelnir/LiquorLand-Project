@@ -4,16 +4,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - LiquorLand</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidenav.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/LiquorLand.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css" rel="stylesheet" integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4=" crossorigin="anonymous">
 </head>
-<body>
+<body style="background-color: #222831;">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LiquorLand</a>
+        <nav class="navbar w-100 navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #31363F;">
+            <div class="container-fluid sticky-top">
+                <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">LiquorLand</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,35 +21,73 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="AddProduct">Add Product</a>
-                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="AddProduct">Add Product</a>
+                            </li>
+                        }
                         @* to remove! *@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="productsShow">show product</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Product" asp-action="productsShow">show product</a>
                         </li>
                     </ul>
                 </div>
             </div>
             <partial name="_LoginPartial.cshtml" />
         </nav>
+        <div class="Categories border-bottom box-shadow">
+            <ul class="CategoryNav">
+                <li class="nav-item">
+                    <nav class="navbar-brand">
+                    <div class="container-fluid">
+                        <button class="navbar-toggler" id="Beer" name="catbt" type="button" data-bs-toggle="collapse" data-bs-target="#SubNav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span>Beer</span>
+                        </button>
+                    </div>
+                </nav>
+                </li class="nav-item">
+                <li>
+                    <nav class="navbar-brand">
+                    <div class="container-fluid">
+                        <button class="navbar-toggler" id="Wine" name="catbt" type="button" data-bs-toggle="collapse" data-bs-target="#SubNav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span>Wine</span>
+                        </button>
+                    </div>
+                </nav>
+                </li>
+                <li class="nav-item">
+                    <nav class="navbar-brand">
+                    <div class="container-fluid">
+                        <button class="navbar-toggler" id="Whiskey" name="catbt" type="button" data-bs-toggle="collapse" data-bs-target="#SubNav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span>Whiskey</span>
+                        </button>
+                    </div>
+                </nav>
+                </li>
+            </ul>
+        </div>
+        <div class="collapse border-bottom mb-3" id="SubNav" data-bs-theme="dark">
+            <div class="bg-secondary p-4" id="SubCat">
+            </div>
+        </div>
     </header>
-@*    <div class="sidebar">
+    @*    <div class="sidebar">
         <ul class="nav nav-pills flex-column justify-content-center">
-            <li class="nav-item">
-                Add New Product
-            </li>
-            <li class="nav-item">
-                Add New Product
-            </li>
+        <li class="nav-item">
+        Add New Product
+        </li>
+        <li class="nav-item">
+        Add New Product
+        </li>
         </ul>
-    </div>*@
-    <div class="container">
+        </div>*@
+    <div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -61,8 +99,48 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- FBS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.getElementById("Beer").addEventListener("click", subNav)
+        document.getElementById("Wine").addEventListener("click", subNav)
+        document.getElementById("Whiskey").addEventListener("click", subNav)
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function subNav() {
+            var el = document.getElementById("SubCat")
+            var cat = $(this).attr('id')
+
+            el.innerHTML = "<ul class='CategoryNavList'>"
+            if(document.getElementById("SubNav").getAttribute("class").endsWith('collapsing'))
+            {
+                await sleep(100)
+            }
+            if(cat == "Wine")
+            {
+                for(const sub of ["Red Wine", "White Wine", "Rose", "Sparkling", "Dessert"]){
+                    el.firstChild.innerHTML += "<li class='nav-item'>" + sub + "</li>"
+                }
+            }
+            if(cat == "Beer")
+            {
+                for(const sub of ["Lager", "Ale", "IPA", "Wheat", "Cider"]){
+                    el.firstChild.innerHTML += "<li class='nav-item'>" + sub + "</li>"
+                }
+            }
+            if(cat == "Whiskey")
+            {
+                for(const sub of ["Bourbon", "Single Malt", "Blended", "American", "Japanese", "Irish", "Single Grain"]){
+                    el.firstChild.innerHTML += "<li class='nav-item'>" + sub + "</li>"
+                }
+            }
+        }
+    </script>
 </body>
 </html>

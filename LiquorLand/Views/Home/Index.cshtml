@@ -4,39 +4,64 @@
 }
 
 <style>
-    .custom-img
-    {
-        width:150px;
-        height:200px;
-        object-fit:contain;
+    .custom-img {
+        width: 150px;
+        height: 200px;
+        object-fit: contain;
     }
 </style>
 
-<div class="container">
-    <div class="row g-0">
+<div>
+    <div class="top-container">
+        <video class="back-video" autoplay loop muted plays-inline id="bgvid" poster="@ViewBag.bgi">
+            <source src="@ViewBag.bg" type="video/mp4">
+        </video>
+        <div class="top-logo">
+            <img src="/bg/logo.png" class="img-fluid card-img" />
+        </div>
+    </div>
+    <div class="row g-0 mb-5 mb">
         @foreach (Product p in Model.all_products)
         {
-            <div class="col-md-3">
-                @Html.ActionLink("details","productsShow", "Product", p)
-                    <img src="@p.ProductImage" alt="Gallery image" class="img-fluid custom-img" />
-                
-                <div>
-                    <button>buy now</button>
-                    <button>add to cart</button>
+            <div class="col-md-3 overflow-visible m-2" style="width: 282.2px; margin-left: 10px;">
+                <div class="card border-dark text-center rounded-5 align-items-center" style="background-color: #31363F; color: #EEEEEE;">
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a href=@Url.Action("Edit", "User", p) class="top-0 start-0 position-absolute border-hidden" style="transform:translate(10px,10px)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                            </svg>
+                        </a>
+                    }
+                    <form asp-action="productsShow" asp-controller="Product" method="post" asp-route-ProductName=@p.ProductName>
+                        <div class="transition ease-in duration-300 scale-110-hover">
+                            <input type="hidden" name="serial" value="@p.Serial" />
+                            <input type="image" src="@p.ProductImage" alt="Submit" class="img-fluid custom-img" style="transform: translateY(-100px)" />
+                        </div>
+                    </form>
+                    <h5 class="card-title">@p.ProductName</h5>
+                    <span class="border-top border-dashed border-light w-50"></span>
+                    <div class="card-body">
+                        <p class="card-text">@p.ProductSubCategory @p.ProductCategory</p>
+                        <p class="card-text"><span class="badge bg-primary">Price: </span>$@p.ProductPrice</p>
+                        <button class="btn btn-light">add to cart</button>
+                    </div>
                 </div>
-                
             </div>
         }
     </div>
-    
 </div>
 
 
 
-
+<script>
+    document.getElementById("bgvid").playbackRate = 0.9
+</script>
 
 @* <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div> *@
+    </div> *@
 

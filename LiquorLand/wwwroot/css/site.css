@@ -9,10 +9,67 @@ html {
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
+    color: #EEEEEE !important;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    color: #EEEEEE !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #EEEEEE !important;
+}
+
+.back-video {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.top-container {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    pointer-events: none;
+    aspect-ratio: 25/10;
+}
+
+.top-logo {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    left: 25%;
+    top: 5%;
+    right: 25%;
+}
+
+.CategoryNav {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    list-style-type: none;
+    font-size: 24px;
+    background-color: #31363F;
+}
+
+.CategoryNavList {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    list-style-type: none;
+    font-size: 24px;
+    background-color: #43516b;
+}
+
+.Categories {
+    position: sticky;
+    background-color: #31363F;
 }

@@ -29,7 +29,7 @@ namespace LiquorLand.Migrations.Product
                         .HasColumnType("nvarchar(5)");
 
                     b.Property<decimal>("AlcoholPercentage")
-                        .HasColumnType("decimal(3,2)");
+                        .HasColumnType("decimal(18,1)");
 
                     b.Property<string>("Country")
                         .HasMaxLength(100)

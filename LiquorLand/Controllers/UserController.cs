@@ -69,5 +69,37 @@ namespace LiquorLand.Controllers
         {
             return View(view, product);
         }
+
+        [Authorize(Roles = "Admin")]
+        [Route("Admin/EditProduct")]
+        public IActionResult Edit(Product product)
+        {
+            return View("EditProduct", product);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EditProduct(Product product, IFormFile image)
+        {
+            if(ModelState.IsValid)
+            {
+                Product? old_p = await _productContext.Products.FindAsync(product.Serial);
+                if (old_p != null)
+                {
+                    if (image != null)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            product.RemoveImage(old_p.ProductImage);
+                            await image.CopyToAsync(memoryStream);
+                            product.ProductImage = await product.SaveImage(image);
+                        }
+                    }
+                    _productContext.Entry<Product>(old_p).CurrentValues.SetValues(product);
+                }
+                await _productContext.SaveChangesAsync();
+            }
+
+            return Redirect($"/product/{product.ProductName}");
+        }
     }
 }

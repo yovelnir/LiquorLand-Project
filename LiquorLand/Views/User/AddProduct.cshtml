@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 class="text-light text-center">@ViewData["Title"]</h1>
 <style>
     /* For Chrome, Safari, Edge, and Opera */
 input::-webkit-outer-spin-button,
@@ -18,93 +18,98 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
+
+.form-floating>.form-control-plaintext~label::after, .form-floating>.form-control:focus~label::after, .form-floating>.form-control:not(:placeholder-shown)~label::after, .form-floating>.form-select~label::after{
+    background-color: black;
+    color: black;
+}
 </style>
 
 
-<h4>Product</h4>
+<h4 class="text-light text-center">Product</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="row justify-content-center">
+    <div class="col-md-4 justify-content-center align-items-center">
         <form asp-action="AddNewProduct" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger">@ViewBag.ErrorMessage</div>
 
             <div class="form-floating mb-1">
-                <input asp-for="Serial" type="text" maxlength="5" class="form-control" placeholder="serial"/>
-                <label asp-for="Serial" class="control-label">Product Serial</label>
+                <input asp-for="Serial" type="text" maxlength="5" class="form-control bg-black text-light" placeholder="serial"/>
+                <label asp-for="Serial" class="control-label text-light">Product Serial</label>
                 <span asp-validation-for="Serial" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-1">
-                <input asp-for="ProductName" class="form-control" placeholder="name"/>
-                <label asp-for="ProductName" class="control-label">Product Name</label>
+                <input asp-for="ProductName" class="form-control bg-black text-light" placeholder="name"/>
+                <label asp-for="ProductName" class="control-label text-light">Product Name</label>
                 <span asp-validation-for="ProductName" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-1">
-                <select asp-for="ProductCategory" class="form-select" id="cat">
+                <select asp-for="ProductCategory" class="form-select bg-black text-light" id="cat">
                     <option selected disabled>Category</option>
                     <option value="Wine">Wine</option>
                     <option value="Beer">Beer</option>
                     <option value="Whisky">Whisky</option>
                 </select>
-                <label asp-for="ProductCategory" class="control-label">Product Category</label>
+                <label asp-for="ProductCategory" class="control-label text-light">Product Category</label>
                 <span asp-validation-for="ProductCategory" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-1">
-                <select asp-for="ProductSubCategory" class="form-select" id="subcat">
+                <select asp-for="ProductSubCategory" class="form-select bg-black text-light" id="subcat">
                     <option selected disabled>Sub Category</option>
                 </select>
-                <label asp-for="ProductSubCategory" class="control-label">Product Sub Category</label>
+                <label asp-for="ProductSubCategory" class="control-label text-light">Product Sub Category</label>
                 <span asp-validation-for="ProductSubCategory" class="text-danger"></span>
             </div>
 
             <div class="input-group form-floating mb-1">
-                <input asp-for="AlcoholPercentage" type="number" min="0" step="0.1" class="form-control" placeholder="al%"/>
-                <label asp-for="AlcoholPercentage" class="control-label">Alcohol Percentage</label>
-                <span class="input-group-text" id="basic-addon1">%</span>
+                <input asp-for="AlcoholPercentage" type="number" min="0" step="0.1" class="form-control bg-black text-light" placeholder="al%"/>
+                <label asp-for="AlcoholPercentage" class="control-label text-light">Alcohol Percentage</label>
+                <span class="input-group-text text-light" id="basic-addon1">%</span>
                 <span asp-validation-for="AlcoholPercentage" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-1">
-                <input asp-for="Country" class="form-control" placeholder="country"/>
-                <label asp-for="Country" class="control-label">Product Origin Country</label>
+                <input asp-for="Country" class="form-control bg-black text-light" placeholder="country"/>
+                <label asp-for="Country" class="control-label text-light">Product Origin Country</label>
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-1">
-                <input asp-for="ProductMaker" class="form-control" placeholder="maker"/>
-                <label asp-for="ProductMaker" class="control-label">Product Manufacturer</label>
+                <input asp-for="ProductMaker" class="form-control bg-black text-light" placeholder="maker"/>
+                <label asp-for="ProductMaker" class="control-label text-light">Product Manufacturer</label>
                 <span asp-validation-for="ProductMaker" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-1">
-                <input asp-for="Volume" type="number" min="0" step="0.1" class="form-control" placeholder="volume"/>
-                <label asp-for="Volume" class="control-label">Product Liquid Volume</label>
+                <input asp-for="Volume" type="number" min="0" step="0.1" class="form-control bg-black text-light" placeholder="volume"/>
+                <label asp-for="Volume" class="control-label text-light">Product Liquid Volume</label>
                 <span asp-validation-for="Volume" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-1">
-                <input asp-for="ProductPrice" min="0" step="0.01" type="number" class="form-control" placeholder="price" />
-                <label asp-for="ProductPrice" class="control-label">Product Price</label>
+                <input asp-for="ProductPrice" min="0" step="0.01" type="number" class="form-control bg-black text-light" placeholder="price" />
+                <label asp-for="ProductPrice" class="control-label text-light">Product Price</label>
                 <span asp-validation-for="ProductPrice" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-1">
-                <input asp-for="Stock" type="number" min="0" step="1" class="form-control" placeholder="Stock" id="stock"/>
-                <label asp-for="Stock" class="control-label">Product Stock</label>
+                <input asp-for="Stock" type="number" min="0" step="1" class="form-control bg-black text-light" placeholder="Stock" id="stock"/>
+                <label asp-for="Stock" class="control-label text-light">Product Stock</label>
                 <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
             
             <div class="form-floating mb-1">
-                <input asp-for="ProductDescription" class="form-control" placeholder="description" />
-                <label asp-for="ProductDescription" class="control-label">Product Description</label>
+                <input asp-for="ProductDescription" class="form-control bg-black text-light" placeholder="description" />
+                <label asp-for="ProductDescription" class="control-label text-light">Product Description</label>
                 <span asp-validation-for="ProductDescription" class="text-danger"></span>
             </div>
 
-            <div class="form-control">
+            <div class="form-control bg-black text-light">
                 <label asp-for="ProductImage" class="control-label">Product Image</label>
-                <input name="image" accept="image/*" type="file" class="form-control" placeholder="image" id="imgInp" />
+                <input name="image" accept="image/*" type="file" class="form-control bg-black text-light" placeholder="image" id="imgInp" />
                 <span asp-validation-for="ProductImage" class="text-danger"></span>
             </div>
 
@@ -119,7 +124,7 @@ input[type="number"] {
     </div>
 </div>
 
-<div>
+<div class="align-items-center"> 
     <a asp-action="Index">Back to List</a>
 </div>
 

@@ -19,6 +19,11 @@ namespace LiquorLand.Controllers
 
         public IActionResult Index()
         {
+            Random rand = new Random();
+            int num = rand.Next(1, 6);
+            ViewBag.bg = $"\\bg\\vid{num}.mp4";
+            ViewBag.bgi = $"\\bg\\vid{num}.jpg";
+
             productViewModel products = new productViewModel();
             products.all_products = _productContext.Products.ToList<Product>();
             return View(products);

@@ -64,7 +64,7 @@ namespace LiquorLand.Models
 
         /*Product Alcohol Precentage*/
         [Required]
-        [Column(TypeName = "decimal(3,2)")]
+        [Column(TypeName = "decimal(18,1)")]
         public decimal AlcoholPercentage { get; set; }
 
         /*Product Liquid Volume*/
@@ -132,6 +132,14 @@ namespace LiquorLand.Models
 
             // Return the saved file name
             return Path.Combine("\\productImages", fileName);
+        }
+
+        public void RemoveImage(string path)
+        {
+            string deletePath = $"{Directory.GetCurrentDirectory()}\\wwwroot\\{path}";
+
+            if(File.Exists(deletePath))
+                File.Delete(deletePath);
         }
     }
 }

@@ -1,26 +1,101 @@
-﻿@model LiquorLand.Models.Product
+﻿<header>
+    <link rel="stylesheet" href="~/css/product.css" asp-append-version="true" />
+</header>
+@model LiquorLand.Models.Product
 
+@{
+    string p100 = ((Model.ProductPrice / Model.Volume) * 100).ToString("0.00");
+}
 <div>
-   <div>
-        <img src="@Model.ProductImage" alt="ProductImage" width="200" height="270"/>
-        <h4> PRICE: @Model.ProductPrice</h4> <br />
-        <h4> NAME: @Model.ProductName</h4> <br />
-        <h4> CATEGORY: @Model.ProductCategory</h4>
-        <h4> SUB CATEGORY: @Model.ProductSubCategory</h4>
-        <h4> DESCRIPTION: @Model.ProductDescription</h4>
-        <h4> CAPACITY  </h4>
-        <h4> alchohol per </h4>
-        <h4>in storage: 3</h4>
-   </div>
-
-    <div>
-        
-    </div>
-
-    <div>
-        <button>add to cart</button>
-        @* send me a message when product in storge *@
-        <button> notify me</button>
+    <div class="container mt-3">
+        <div class="ProductCard">
+            @if (User.IsInRole("Admin"))
+                    {
+                        <a href=@Url.Action("Edit", "User", Model) class="top-0 start-0 border-hidden" style="transform:translate(10px,10px)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                            </svg>
+                        </a>
+                    }
+            <div class="short-details">
+                <div class="image-container">
+                    <img src="@Model.ProductImage" class="img-fluid" style="width:30%; object-fit:contain;" />
+                </div>
+                <div class="product-info">
+                    <div class="product-name-wrapper">
+                        <h1 class="product-name"><span>@Model.ProductName</span></h1>
+                    </div>
+                    <div class="product-serial">
+                        <strong>Serial</strong>
+                        <div class="serial">@Model.Serial</div>
+                    </div>
+                    <div class="price-wrapper">
+                        <div class="product-price">
+                            <span>$@Model.ProductPrice</span>
+                        </div>
+                    </div>
+                    <div class="unit-info">
+                        <span class="product-per-100">
+                            <span class="unit">@Model.Volume ml</span>
+                            |
+                            <span class="price-msg">Price per 100 ml</span>
+                            -
+                            <span class="price-100">$@p100</span>
+                        </span>
+                    </div>
+                    <div class="buy-product-wrapper d-grid gap-2">
+                        <button class="btn btn-warning rounded-5 shadow-md">Add To Cart</button>
+                        <button class="btn btn-info rounded-5 shadow-md">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-details">
+                <ul class="nav nav-fill nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="fill-tab-0" data-bs-toggle="tab" href="#fill-tabpanel-0" role="tab" aria-controls="fill-tabpanel-0" aria-selected="true"> Description </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="fill-tab-1" data-bs-toggle="tab" href="#fill-tabpanel-1" role="tab" aria-controls="fill-tabpanel-1" aria-selected="false"> Product Details </a>
+                    </li>
+                </ul>
+                <div class="tab-content pt-5" id="tab-content">
+                    <div class="tab-pane active" id="fill-tabpanel-0" role="tabpanel" aria-labelledby="fill-tab-0">
+                        @Model.ProductDescription
+                    </div>
+                    <div class="tab-pane" id="fill-tabpanel-1" role="tabpanel" aria-labelledby="fill-tab-1">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>@Model.ProductName</td>
+                                </tr>
+                                <tr>
+                                    <th>Category</th>
+                                    <td>@Model.ProductSubCategory @Model.ProductCategory</td>
+                                </tr>
+                                <tr>
+                                    <th>Alcohol %</th>
+                                    <td>@Model.AlcoholPercentage</td>
+                                </tr>
+                                <tr>
+                                    <th>Manufacturer</th>
+                                    <td>@Model.ProductMaker</td>
+                                </tr>
+                                <tr>
+                                    <th>Country</th>
+                                    <td>@Model.Country</td>
+                                </tr>
+                                <tr>
+                                    <th>Available Stock</th>
+                                    <td>@Model.Stock</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
