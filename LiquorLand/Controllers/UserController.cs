@@ -32,7 +32,7 @@ namespace LiquorLand.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         [Route("AddProduct")]
-        public async Task<IActionResult> AddNewProduct(Product product, IFormFile image)
+        public async Task<IActionResult> AddNewProduct(Product product, IFormFile? image)
         {
             if (ModelState.IsValid)
             {
@@ -62,7 +62,8 @@ namespace LiquorLand.Controllers
                 return Redirect("/");
             }
 
-            return Redirect("/policy");
+            ModelState.AddModelError(string.Empty, "Something went wrong");
+            return RedirectProduct("AddProduct", product);
         }
 
         private IActionResult RedirectProduct(string view, Product product)
