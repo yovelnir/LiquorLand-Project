@@ -35,8 +35,16 @@
                             </svg>
                         </a>
                     }
+                    @if (p.Stock == 0)
+                    {
+                        <span class="badge rounded-3 text-bg-danger align-self-center fs-6 position-absolute" style="transform: translateY(150px);">Out of Stock</span>
+                    }
+                    @if(p.Stock < 10 && p.Stock != 0)
+                    {
+                        <span class="badge rounded-3 text-bg-danger align-self-center fs-6 position-absolute" style="transform: translateY(150px);">Only @p.Stock left!</span>
+                    }
                     <form asp-action="productsShow" asp-controller="Product" method="post" asp-route-ProductName=@p.ProductName>
-                        <div class="transition ease-in duration-300 scale-110-hover">
+                        <div class="transition ease-in duration-200 scale-110-hover">
                             <input type="hidden" name="serial" value="@p.Serial" />
                             <input type="image" src="@p.ProductImage" alt="Submit" class="img-fluid custom-img" style="transform: translateY(-100px)" />
                         </div>
@@ -46,7 +54,14 @@
                     <div class="card-body">
                         <p class="card-text">@p.ProductSubCategory @p.ProductCategory</p>
                         <p class="card-text"><span class="badge bg-primary">Price: </span>$@p.ProductPrice</p>
-                        <button class="btn btn-light">add to cart</button>
+                        @if(p.Stock == 0)
+                        {
+                            <button class="btn btn-success rounded-3">Notify when back in stock</button>
+                        }
+                        else
+                        {
+                           <button class="btn btn-warning rounded-3">Add to cart</button> 
+                        }
                     </div>
                 </div>
             </div>

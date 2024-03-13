@@ -45,8 +45,24 @@
                         </span>
                     </div>
                     <div class="buy-product-wrapper d-grid gap-2">
-                        <button class="btn btn-warning rounded-5 shadow-md">Add To Cart</button>
-                        <button class="btn btn-info rounded-5 shadow-md">Buy Now</button>
+                        @if(Model.Stock == 0)
+                        {
+                            <span class="badge rounded-3 text-bg-danger fs-5 w-25" style="justify-self: center;">Out of Stock</span>
+                            <button class="btn btn-warning fs-6 text-white rounded-3">Notify when back in stock</button>
+                        }
+                        else
+                        {
+                            @if (Model.Stock < 10)
+                            {
+                                <span class="badge rounded-5 text-bg-danger fs-5 w-25">Only @Model.Stock left!</span>
+                            }
+                            <div class="form-floating mb-1">
+                                <input class="form-control" type="number" step="1" min="1" max="@Model.Stock" style="width: 30%;" aria-required="true" placeholder="Quantity"/>
+                                <label>Quantity</label>
+                            </div>
+                            <button class="btn btn-warning rounded-5 shadow-md">Add To Cart</button>
+                            <button class="btn btn-info rounded-5 shadow-md">Buy Now</button>
+                        }
                     </div>
                 </div>
             </div>
