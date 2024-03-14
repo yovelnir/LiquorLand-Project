@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LiquorLand.Models;
+using LiquorLand.ViewModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Drawing;
 using System.IO;
@@ -101,6 +102,17 @@ namespace LiquorLand.Controllers
             }
 
             return Redirect($"/product/{product.ProductName}");
+        }
+
+        //TO DO
+        [Authorize(Roles = "Admin")]
+        public IActionResult ProductManager()
+        {
+            productViewModel products = new productViewModel();
+
+            products.all_products = _productContext.Products.ToList<Product>();
+
+            return View("ProductManager", products);
         }
     }
 }
