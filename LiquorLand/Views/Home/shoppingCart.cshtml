@@ -1,0 +1,147 @@
+﻿@using Microsoft.AspNetCore.Http
+@model LiquorLand.Models.ShoppingCart
+<link href="~/css/shoppingcart.css" rel="stylesheet" />
+
+
+<body class="cartTab">
+    <h1>My Shopping Cart</h1>
+    <div class="cart-items">
+        @foreach (var p in Model.CartItems)
+        {
+            <div class="cart-item">
+                <div class="item-details">
+                    <img src="@p.ProductImage" alt="Product Image" />
+                    <div class="item-info">
+                        <h3>@p.ProductName</h3>
+                        <p>@p.ProductDescription</p>
+                    </div>
+                </div>
+                <div class="quantity">
+                    <span class="minus">-</span>
+                    <span class="quantity-value">@Model.numProduct(p.Serial)</span>
+                    <span class="plus">+</span>
+                </div>
+                <div class="item-price">$@p.ProductPrice</div>
+                <div class="total-price">$@(p.ProductPrice * Model.numProduct(p.Serial))</div>
+                <div class="remove-item" data-serial="@p.Serial">Remove</div>
+            </div>
+        }
+    </div>
+    <div class="cart-summary">
+        <div class="total">
+            Total: $@Model.GetTotal()
+        </div>
+        <button class="checkout-btn">Checkout</button>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const quantitySpans = document.querySelectorAll(".quantity span");
+            quantitySpans.forEach(function (span) {
+                span.addEventListener("click", function () {
+                    const parent = this.parentNode;
+                    const valueSpan = parent.querySelector(".quantity-value");
+                    let value = parseInt(valueSpan.textContent);
+                    if (this.classList.contains("minus")) {
+                        value = Math.max(1, value - 1);
+                    } else {
+                        value++;
+                    }
+                    valueSpan.textContent = value;
+                });
+            });
+
+            const removeButtons = document.querySelectorAll(".remove-item");
+            removeButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    const serial = this.getAttribute("data-serial");
+                    removeFromCart(serial);
+                    const cartItem = this.parentNode;
+                    cartItem.remove();
+                });
+            });
+
+            function addToCart(serial) {
+                fetch('/home/addProduct?serial=' + serial)
+                    .then(response => {
+                        if (response.ok) {
+
+                        } else {
+                            console.error('Failed to add product to cart');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error adding product to cart:', error);
+                    });
+            }
+
+
+            function removeFromCart(serial) {
+                //ajax
+            }
+        });
+    </script>
+
+    <style>
+
+        .cart-items {
+            display: grid;
+            gap: 10px;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: auto 1fr 100px 100px 100px auto;
+            align-items: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+            .cart-item img {
+                max-width: 100px;
+                max-height: 100px;
+            }
+
+        .item-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .item-info {
+            margin-left: 10px;
+        }
+
+        .quantity,
+        .item-price,
+        .total-price,
+        .remove-item {
+            text-align: center;
+        }
+
+        .total {
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .checkout-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #e8bc0e;
+            border: none;
+            font-family: Poppins;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+            .checkout-btn:hover {
+                background-color: #d9a805;
+            }
+    </style>
+</body>
+
+

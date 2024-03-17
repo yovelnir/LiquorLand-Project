@@ -7,6 +7,6 @@ namespace LiquorLand.ViewModels
     {
         public List<Product> all_products = new List<Product>();
         public Product product { get; set; }
-
+      
     }
 }

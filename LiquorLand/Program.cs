@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using LiquorLand.Areas.Identity.Data;
 using LiquorLand.Models;
 using LiquorLand.Data;
+using Newtonsoft.Json;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("UserDbContextConnection") ?? throw new InvalidOperationException("Connection string 'UserDbContextConnection' not found.");
 
@@ -26,6 +27,18 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/AccessDenied";
 });
 
+
+//for me
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(3600); // Session timeout of 1 hour
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,12 +54,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseAuthentication();
-
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "ProductPage",
-    pattern: "product/item/{ProductName?}",
+    pattern: "item/{ProductName?}",
     defaults: new { controller = "Product", action="productsShow"});
 
 app.MapControllerRoute(
@@ -88,6 +101,18 @@ using (var scope = app.Services.CreateScope())
         await userManager.AddToRoleAsync(user, "User");
     }
 }
+
+app.Use(async (context, next) =>
+{
+    // Store Model
+    if (context.Session.GetString("cart") == null)
+    {
+        var cart = new ShoppingCart(); // Initialize your model
+        context.Session.SetString("cart", JsonConvert.SerializeObject(cart));
+    }
+
+    await next();   
+});
 
 app.UseStaticFiles();
 

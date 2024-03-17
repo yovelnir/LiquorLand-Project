@@ -101,7 +101,7 @@ namespace LiquorLand.Controllers
                 await _productContext.SaveChangesAsync();
             }
 
-            return Redirect($"/product/{product.ProductName}");
+            return Redirect($"/item/{product.ProductName}");
         }
 
         //TO DO
