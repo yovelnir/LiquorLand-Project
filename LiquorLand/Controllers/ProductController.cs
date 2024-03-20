@@ -44,7 +44,17 @@ public class ProductController : Controller
     {
         return View("products", p);
     }
-  
+    public IActionResult searchProduct(string word ="wine")
+    {
+        productViewModel products = new productViewModel();
+        foreach(Product p in _productContext.Products)
+        {
+            products.all_products.Add(p);
+        }
+        ViewData["searchWord"] = word;
+        return View("Search", products);
+    }
+
     public async Task<IActionResult> ProductGallery(string? category, string? sub)
     {
         productViewModel products = new productViewModel();

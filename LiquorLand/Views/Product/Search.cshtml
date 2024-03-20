@@ -1,0 +1,111 @@
+﻿<!--model LiquorLand.Models.Product-->
+@model LiquorLand.ViewModels.productViewModel
+<body>
+    <script>
+        alert("hey");
+        function showP(p) {
+            return RedirectToAction("productsShow", "Product", new { ProductName = p.serial });
+
+            var div = document.createElement('div');
+            var formp = document.createElement('form');
+            formp.setAttribute("asp-action", "productsShow");
+            //formp.setAttribute("action", "/Product/productsShow");
+            formp.setAttribute("asp-controller", "Product");
+            formp.setAttribute("method", "post");
+            formp.setAttribute("asp-route-ProductName", p.productName);
+
+            var productNameInput = document.createElement('input');
+            productNameInput.setAttribute("type", "hidden");
+            productNameInput.setAttribute("name", "serial"); // This should match the parameter name in your controller action
+            productNameInput.setAttribute("value", p.Serial);
+            
+            formp.appendChild(productNameInput);
+
+            var h1 = document.createElement('h1');
+            h1.textContent = p.productName;
+            formp.appendChild(h1);
+            //document.querySelector('#mainP').appendChild(h1);
+            //var pImgInput = document.createElement('input');
+
+            var pImg = document.createElement('img');
+            pImg.src = p.productImage;
+            pImg.alt = "Submit";
+            pImg.classList.add('img-fluid');
+            pImg.style.width = '50%';
+            pImg.style.width = '55px';
+            pImg.style.objectFit = 'contain';
+            formp.appendChild(pImg);
+            //document.querySelector('#mainP').appendChild(pImg);
+            var pCat = document.createElement('div');
+            pCat.innerHTML = p.productCategory;
+            formp.appendChild(pCat);
+
+            //document.querySelector('#mainP').appendChild(pCat);
+            var pSubCat = document.createElement('div');
+            pSubCat.innerHTML = p.productSubCategory;
+            formp.appendChild(pSubCat);
+
+            //document.querySelector('#mainP').appendChild(pSubCat);
+            var price = document.createElement('div');
+            price.innerHTML = '$' + p.productPrice.toString();
+            //document.querySelector('#mainP').appendChild(price);
+            formp.appendChild(price);
+            document.querySelector('#mainP').appendChild(formp);
+            //formp.submit();
+            /*  <form asp-action="productsShow" asp-controller="Product" method="post" asp-route-ProductName=p.ProductName>
+                    <div class="transition ease-in duration-200 scale-110-hover">
+                        <input type="hidden" name="serial" value="p.Serial" />
+                        <input type="image" src="p.ProductImage" alt="Submit" class="img-fluid custom-img" style="transform: translateY(-100px)" />
+                    </div>
+                </form>*/
+
+        }
+    </script>
+
+<div class="productsFound" id="mainP">
+    @if (@ViewData["searchWord"] == null)
+    {
+        <h1>no results found</h1>
+    }
+    else
+    {
+        @foreach (Product p in Model.all_products)
+        {
+                if (p.ProductCategory.ToLower().Contains(ViewData["searchWord"].ToString().ToLower()) ||
+                p.ProductName.ToLower().Contains(ViewData["searchWord"].ToString().ToLower()) ||
+                p.Serial.ToLower().Contains(ViewData["searchWord"].ToString().ToLower()) ||
+                p.ProductSubCategory.ToLower().Contains(ViewData["searchWord"].ToString().ToLower()) ||
+                p.Country.ToLower().Contains(ViewData["searchWord"].ToString().ToLower()))
+                {
+                    <div>
+                        <h1>@p.ProductName</h1>
+                        <a href="@Url.Action("ProductGallery", "Product", new { category = p.ProductCategory, sub = p.ProductSubCategory })">View Details</a>
+                    </div>
+                }
+        
+            /*if (p.ProductCategory.ToLower().Contains(@ViewData["searchWord"].ToString().ToLower()))
+            {
+                    <script>showP(@Html.Raw(Json.Serialize(p)));</script>
+            }
+            else if (p.ProductName.ToLower().Contains(@ViewData["searchWord"].ToString().ToLower()))
+            {
+                    <script>showP(@Html.Raw(Json.Serialize(p)));</script>
+            }
+            else if (p.Serial.ToLower().Contains(@ViewData["searchWord"].ToString().ToLower()))
+            {
+                <script>showP(@Html.Raw(Json.Serialize(p)));</script>
+            }
+            else if (p.ProductSubCategory.ToLower().Contains(@ViewData["searchWord"].ToString().ToLower()))
+            {
+                <script>showP(@Html.Raw(Json.Serialize(p)));</script>
+            }
+            else if (p.Country.ToLower().Contains(@ViewData["searchWord"].ToString().ToLower()))
+            {
+                    <script>showP(@Html.Raw(Json.Serialize(p)));</script>
+            }*/
+        }
+        
+    }
+</div>
+
+</body>
