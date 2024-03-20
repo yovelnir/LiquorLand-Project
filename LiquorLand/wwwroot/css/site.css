@@ -73,3 +73,12 @@ h1, h2, h3, h4, h5, h6 {
     position: sticky;
     background-color: #31363F;
 }
+
+#SubCat a{
+    color:inherit;
+    text-decoration: none;
+}
+
+#SubCat{
+    height: 70px;
+}

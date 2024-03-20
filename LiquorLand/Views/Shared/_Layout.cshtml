@@ -47,6 +47,8 @@
                         </li>
                     </ul>
                 </div>
+                    </ul>
+                </div>
             </div>
             <partial name="_LoginPartial.cshtml" />
         </nav>
@@ -55,7 +57,7 @@
                 <li class="nav-item">
                     <nav class="navbar-brand">
                     <div class="container-fluid">
-                        <button class="navbar-toggler" id="Beer" name="catbt" type="button" data-bs-toggle="collapse" data-bs-target="#SubNav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" id="Beer" name="catbt" type="button" data-bs-target="#SubNav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span>Beer</span>
                         </button>
                     </div>
@@ -64,7 +66,7 @@
                 <li>
                     <nav class="navbar-brand">
                     <div class="container-fluid">
-                        <button class="navbar-toggler" id="Wine" name="catbt" type="button" data-bs-toggle="collapse" data-bs-target="#SubNav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" id="Wine" name="catbt" type="button" data-bs-target="#SubNav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span>Wine</span>
                         </button>
                     </div>
@@ -73,7 +75,7 @@
                 <li class="nav-item">
                     <nav class="navbar-brand">
                     <div class="container-fluid">
-                        <button class="navbar-toggler" id="Whiskey" name="catbt" type="button" data-bs-toggle="collapse" data-bs-target="#SubNav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" id="Whiskey" name="catbt" type="button" data-bs-target="#SubNav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span>Whiskey</span>
                         </button>
                     </div>
@@ -81,21 +83,55 @@
                 </li>
             </ul>
         </div>
-        <div class="collapse border-bottom mb-3" id="SubNav" data-bs-theme="dark">
+        <div class="collapse border-bottom" id="SubNav" data-bs-theme="dark">
             <div class="bg-secondary p-4" id="SubCat">
+                <ul class='CategoryNavList'>
+
+                </ul>
             </div>
         </div>
     </header>
-    @*    <div class="sidebar">
-        <ul class="nav nav-pills flex-column justify-content-center">
-        <li class="nav-item">
-        Add New Product
-        </li>
-        <li class="nav-item">
-        Add New Product
-        </li>
-        </ul>
-        </div>*@
+    
+    @if(User.IsInRole("Admin"))
+    {
+        <style>
+            .admincontrol{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+                color: white;
+                height:100%;
+                list-style-type: none;
+                font-size: 24px;
+            }
+        </style>
+        <div style="display: flex; position: fixed; z-index: 10000; height:100%; width: 0"  >
+            <button class="btn btn-warning rounded-circle" style="height:40px; width: 40px; font-size: 20px; align-self: center; transform: translateY(-40px)" type="button" data-bs-toggle="offcanvas" data-bs-target="#AdminControls" aria-controls="AdminControls">
+                <span id="control" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Admin Controls">+</span>
+            </button>
+            <div class="offcanvas offcanvas-start" style="background-color: #222831" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="AdminControls" aria-labelledby="AdminControlsLabel">
+                <div class="offcanvas-header">
+                    <h4 class="offcanvas-title" id="AdminControlsLabel">Admin Controls</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body" style="background-color: #222831">
+                    <div class="h-75">
+                        <ul class="admincontrol">
+                            <li class="nav-item">
+                                <a class="btn btn-primary text-light" asp-area="" asp-controller="User" asp-action="AddProduct">Add New Product</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary text-light" asp-area="" asp-controller="User" asp-action="ProductManager">Product Manager</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
     <div>
         <main role="main" class="pb-3">
             @RenderBody()
@@ -118,7 +154,12 @@
         window.location.href = "Url.Action("searchProduct", "Product")?word=" + searchTerm;});
     </script>-->
     <script>
+
+        const element = document.querySelector('#control');
+        const tooltip = new bootstrap.Tooltip(element);
+
         let clicker = null;
+        let open = false;
         document.getElementById("Beer").addEventListener("click", subNav)
         document.getElementById("Wine").addEventListener("click", subNav)
         document.getElementById("Whiskey").addEventListener("click", subNav)
@@ -132,10 +173,14 @@
             var cat = $(this).attr('id')
 
             el.innerHTML = "<ul class='CategoryNavList'>"
-            await sleep(300)
+            $(document.getElementById("SubNav")).collapse("toggle");
+
+            if(open)
+                await sleep(300)
       
             if(cat == "Wine")
             {
+                el.firstChild.innerHTML = ""
                 for(const sub of ["Red Wine", "White Wine", "Rose", "Sparkling", "Dessert"]){
                     const category = sub.split(" ")
                     const url = "@Url.Action("ProductGallery", "Product", new { category="Wine", sub="text1" })".replace("text1", category[0])
@@ -144,6 +189,7 @@
             }
             else if(cat == "Beer")
             {
+                el.firstChild.innerHTML = ""
                 for(const sub of ["Lager", "Ale", "IPA", "Wheat", "Cider"]){
                     const url = "@Url.Action("ProductGallery", "Product", new { category="Beer", sub="text1" })".replace("text1", sub)
                     el.firstChild.innerHTML += "<a href="+url+ " class='nav-item'>" + sub + "</a>"
@@ -151,6 +197,7 @@
             }
             else if(cat == "Whiskey")
             {
+                el.firstChild.innerHTML = ""
                 for(const sub of ["Bourbon", "Single Malt", "Blended", "American", "Japanese", "Irish", "Single Grain"]){
                     const url = "@Url.Action("ProductGallery", "Product", new { category="Whiskey", sub="text1" })".replace("text1", sub)
                     el.firstChild.innerHTML += "<a href="+url+ " class='nav-item'>" + sub + "</a>"
@@ -162,7 +209,12 @@
                 // If navbar is already open and a different category is clicked, toggle the navbar
                 $(document.getElementById("SubNav")).collapse("toggle");
             }
+
+            open = true;
             clicker = this;
+
+            if(document.getElementById("SubNav").getAttribute("class").endsWith('collapse'))
+                open = false;
         }
     </script>
 </body>

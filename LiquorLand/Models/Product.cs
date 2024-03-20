@@ -10,6 +10,8 @@ namespace LiquorLand.Models
 {
     public class ProductContext : DbContext
     {
+        internal readonly object HttpContext;
+
         public DbSet<Product> Products { get; set;}
 
         public ProductContext(DbContextOptions<ProductContext> options)
