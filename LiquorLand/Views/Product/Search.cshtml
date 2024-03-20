@@ -1,110 +1,53 @@
 ﻿<!--model LiquorLand.Models.Product-->
 @model LiquorLand.ViewModels.productViewModel
 <body>
-    <script>
-        alert("hey");
-        function showP(p) {
-            return RedirectToAction("productsShow", "Product", new { ProductName = p.serial });
 
-            var div = document.createElement('div');
-            var formp = document.createElement('form');
-            formp.setAttribute("asp-action", "productsShow");
-            //formp.setAttribute("action", "/Product/productsShow");
-            formp.setAttribute("asp-controller", "Product");
-            formp.setAttribute("method", "post");
-            formp.setAttribute("asp-route-ProductName", p.productName);
-
-            var productNameInput = document.createElement('input');
-            productNameInput.setAttribute("type", "hidden");
-            productNameInput.setAttribute("name", "serial"); // This should match the parameter name in your controller action
-            productNameInput.setAttribute("value", p.Serial);
-            
-            formp.appendChild(productNameInput);
-
-            var h1 = document.createElement('h1');
-            h1.textContent = p.productName;
-            formp.appendChild(h1);
-            //document.querySelector('#mainP').appendChild(h1);
-            //var pImgInput = document.createElement('input');
-
-            var pImg = document.createElement('img');
-            pImg.src = p.productImage;
-            pImg.alt = "Submit";
-            pImg.classList.add('img-fluid');
-            pImg.style.width = '50%';
-            pImg.style.width = '55px';
-            pImg.style.objectFit = 'contain';
-            formp.appendChild(pImg);
-            //document.querySelector('#mainP').appendChild(pImg);
-            var pCat = document.createElement('div');
-            pCat.innerHTML = p.productCategory;
-            formp.appendChild(pCat);
-
-            //document.querySelector('#mainP').appendChild(pCat);
-            var pSubCat = document.createElement('div');
-            pSubCat.innerHTML = p.productSubCategory;
-            formp.appendChild(pSubCat);
-
-            //document.querySelector('#mainP').appendChild(pSubCat);
-            var price = document.createElement('div');
-            price.innerHTML = '$' + p.productPrice.toString();
-            //document.querySelector('#mainP').appendChild(price);
-            formp.appendChild(price);
-            document.querySelector('#mainP').appendChild(formp);
-            //formp.submit();
-            /*  <form asp-action="productsShow" asp-controller="Product" method="post" asp-route-ProductName=p.ProductName>
-                    <div class="transition ease-in duration-200 scale-110-hover">
-                        <input type="hidden" name="serial" value="p.Serial" />
-                        <input type="image" src="p.ProductImage" alt="Submit" class="img-fluid custom-img" style="transform: translateY(-100px)" />
-                    </div>
-                </form>*/
-
-        }
-    </script>
-
-<div class="productsFound" id="mainP">
-    @if (@ViewData["searchWord"] == null)
+<div id="gallery "class="row g-0 mb-5 mb">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @foreach (Product p in Model.all_products)
     {
-        <h1>no results found</h1>
-    }
-    else
-    {
-        @foreach (Product p in Model.all_products)
-        {
-                if (p.ProductCategory.ToLower().Contains(ViewData["searchWord"].ToString().ToLower()) ||
-                p.ProductName.ToLower().Contains(ViewData["searchWord"].ToString().ToLower()) ||
-                p.Serial.ToLower().Contains(ViewData["searchWord"].ToString().ToLower()) ||
-                p.ProductSubCategory.ToLower().Contains(ViewData["searchWord"].ToString().ToLower()) ||
-                p.Country.ToLower().Contains(ViewData["searchWord"].ToString().ToLower()))
+        <div class="col-md-3 overflow-visible m-2" style="width: 282.2px; margin-left: 10px;">
+            <div class="card border-dark text-center rounded-5 align-items-center" style="background-color: #31363F; color: #EEEEEE;">
+
+                @if (User.IsInRole("Admin"))
                 {
-                    <div>
-                        <h1>@p.ProductName</h1>
-                        <a href="@Url.Action("ProductGallery", "Product", new { category = p.ProductCategory, sub = p.ProductSubCategory })">View Details</a>
-                    </div>
+                    <a href=@Url.Action("Edit", "User", p) class="top-0 start-0 position-absolute border-hidden" style="transform:translate(10px,10px)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                        </svg>
+                    </a>
                 }
-        
-            /*if (p.ProductCategory.ToLower().Contains(@ViewData["searchWord"].ToString().ToLower()))
-            {
-                    <script>showP(@Html.Raw(Json.Serialize(p)));</script>
-            }
-            else if (p.ProductName.ToLower().Contains(@ViewData["searchWord"].ToString().ToLower()))
-            {
-                    <script>showP(@Html.Raw(Json.Serialize(p)));</script>
-            }
-            else if (p.Serial.ToLower().Contains(@ViewData["searchWord"].ToString().ToLower()))
-            {
-                <script>showP(@Html.Raw(Json.Serialize(p)));</script>
-            }
-            else if (p.ProductSubCategory.ToLower().Contains(@ViewData["searchWord"].ToString().ToLower()))
-            {
-                <script>showP(@Html.Raw(Json.Serialize(p)));</script>
-            }
-            else if (p.Country.ToLower().Contains(@ViewData["searchWord"].ToString().ToLower()))
-            {
-                    <script>showP(@Html.Raw(Json.Serialize(p)));</script>
-            }*/
-        }
-        
+                @if (p.Stock == 0)
+                {
+                    <span class="badge rounded-3 text-bg-danger align-self-center fs-6 position-absolute" style="transform: translateY(150px);">Out of Stock</span>
+                }
+                @if (p.Stock < 10 && p.Stock != 0)
+                {
+                    <span class="badge rounded-3 text-bg-danger align-self-center fs-6 position-absolute" style="transform: translateY(150px);">Only @p.Stock left!</span>
+                }
+                <form asp-action="productsShow" asp-controller="Product" method="post" asp-route-ProductName=@p.ProductName>
+                    <div class="transition ease-in duration-200 scale-110-hover">
+                        <input type="hidden" name="serial" value="@p.Serial" />
+                        <input type="image" src="@p.ProductImage" alt="Submit" class="img-fluid custom-img" style="transform: translateY(-100px)" />
+                    </div>
+                </form>
+                <h5 class="card-title">@p.ProductName</h5>
+                <span class="border-top border-dashed border-light w-50"></span>
+                <div class="card-body">
+                    <p class="card-text">@p.ProductSubCategory @p.ProductCategory</p>
+                    <p class="card-text"><span class="badge bg-primary">Price: </span>$@p.ProductPrice</p>
+                    @if (p.Stock == 0)
+                    {
+                        <button class="btn btn-success rounded-3">Notify when back in stock</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-warning rounded-3">Add to cart</button>
+                    }
+                </div>
+            </div>
+        </div>
     }
 </div>
 
