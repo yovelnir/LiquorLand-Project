@@ -4,9 +4,12 @@ using LiquorLand.Migrations;
 using System.Data.SqlClient;
 using Humanizer;
 using LiquorLand.Areas.Identity.Data;
+using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using LiquorLand.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json.Serialization;
+
 
 public class ProductController : Controller
 {
@@ -45,7 +48,96 @@ public class ProductController : Controller
     {
         return View("products", p);
     }
-  
+
+    public IActionResult FilterProductSearch(string? serial, string? country, decimal? price, int? saleAmount, string? maker,
+       string? category, string? sub, string? name, int? volume, decimal? alpercent, string? searchTerm)
+    {
+        productViewModel? product = null;
+        if (searchTerm != null && searchTerm != "")
+        {
+            product = searchFilter(searchTerm);
+        }
+        //View Model to hold the products list
+        productViewModel viewModel = new productViewModel();
+        
+        //Queryable variable to handle all queries
+        IQueryable<Product> products = _productContext.Products;
+
+        //Query over serial, if you query over serial the model is returned to the partial view with only one product in the list!
+        if (serial != null)
+        {
+            viewModel.all_products = products.Where<Product>(p => p.Serial == serial).ToList<Product>();
+
+            return PartialView("Search", viewModel);
+        }
+
+        if (product != null)
+        {
+            products = product.all_products.AsQueryable();
+        }
+
+        //Query over country
+        if (country != null && products.Any(p => p.Country == country))
+            products = products.Where<Product>(p => p.Country == country);
+        //Query over price
+        if (price != null && products.Any(p => p.ProductPrice >= price))
+            products = products.Where<Product>(p => p.ProductPrice >= price);
+        //Query over sales amount
+        if (saleAmount != null && products.Any(p => p.SaleAmount >= saleAmount))
+            products = products.Where<Product>(p => p.SaleAmount >= saleAmount);
+        //Query over maker
+        if (maker != null && products.Any(p => p.ProductMaker.ToLower().Contains(maker)))
+            products = products.Where<Product>(p => p.ProductMaker.ToLower().Contains(maker));
+        //Query over category
+        if (category != null && products.Any(p => p.ProductCategory == category))
+            products = products.Where<Product>(p => p.ProductCategory == category);
+        //Query over sub category
+        if (sub != null)
+            products = products.Where<Product>(p => p.ProductSubCategory == sub);
+        //Query over name
+        if (name != null)
+            products = products.Where<Product>(p => p.ProductName.Contains(name));
+        //Query over volume
+        if (volume != null)
+            products = products.Where<Product>(p => p.Volume >= volume);
+        //Query over alcohol percentage
+        if (alpercent != null && products.Any(p => p.AlcoholPercentage >= alpercent))
+            products = products.Where<Product>(p => p.AlcoholPercentage >= alpercent);
+
+        //Final products list after SQL queries
+        viewModel.all_products = products.ToList<Product>();
+
+
+        return PartialView("Search", viewModel);
+    }
+
+    private productViewModel searchFilter(string word)
+    {
+        productViewModel products = new productViewModel();
+        if (word != null)
+            foreach (Product p in _productContext.Products)
+            {
+                if (p.ProductCategory.ToLower().Contains(word.ToString().ToLower()) ||
+                    p.ProductName.ToLower().Contains(word.ToString().ToLower()) ||
+                    p.Serial.ToLower().Contains(word.ToString().ToLower()) ||
+                    p.ProductSubCategory.ToLower().Contains(word.ToString().ToLower()) ||
+                    p.Country.ToLower().Contains(word.ToString().ToLower()))
+                {
+                    products.all_products.Add(p);
+                }
+            }
+
+        return products;
+    }
+    public IActionResult searchProduct(string word)
+    {
+        productViewModel products = searchFilter(word);
+        //ViewData["searchWord"] = word;
+        //return View("Search", products);
+        //return RedirectToAction("ProductGallery","Product",products);
+        return View("ProductGallery",products);
+    }
+
     public async Task<IActionResult> ProductGallery(string? category, string? sub)
     {
         productViewModel products = new productViewModel();

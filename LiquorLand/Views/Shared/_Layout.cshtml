@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - LiquorLand</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/sidenav.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/LiquorLand.styles.css" asp-append-version="true" />
     <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css" rel="stylesheet" integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4=" crossorigin="anonymous">
 </head>
@@ -36,7 +35,19 @@
                             </a>
                             
                         </li>
-
+                        <li class="nav-item">
+                            <form asp-controller="Product" asp-action="searchProduct" method="get">
+                            <div class="input-group">
+                                <div class="form-outline" data-mdb-input-init>
+                                    <input type="search" id="form1" class="form-control" name="word" />
+                                    <label class="form-label" for="form1">Search</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary" data-mdb-ripple-init>
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -143,7 +154,11 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <!-- FBS -->
     @await RenderSectionAsync("Scripts", required: false)
-
+    <!--<script>
+    document.getElementById("searchButton").addEventListener("click", function () {
+        var searchTerm = document.getElementById("form1").value;
+        window.location.href = "Url.Action("searchProduct", "Product")?word=" + searchTerm;});
+    </script>-->
     <script>
 
         let clicker = null;
