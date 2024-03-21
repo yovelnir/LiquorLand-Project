@@ -82,3 +82,15 @@ h1, h2, h3, h4, h5, h6 {
 #SubCat{
     height: 70px;
 }
+
+#productGallery{
+    gap: 2px;
+    width:90%;
+    justify-content:center;
+}
+
+.galleryContainer {
+    transform: translateY(100px);
+    display: flex;
+    justify-content: center;
+}

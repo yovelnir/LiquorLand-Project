@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css" rel="stylesheet" integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4=" crossorigin="anonymous">
 </head>
 <body style="background-color: #222831;">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <header>
         <nav class="navbar w-100 navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #31363F;">
             <div class="container-fluid sticky-top">
@@ -26,9 +28,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="shoppingCarts">
-                                <svg xmlns="http://www.w3.org/2000/svg"  width="20" height="20" fill="currentColor" class="bi bi-cart" viewBox="0 0 20 20">
+                        <li class="nav-item position-absolute" style="right: 10px">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="shoppingCarts">
+                                <svg xmlns="http://www.w3.org/2000/svg"  width="30" height="30" fill="currentColor" class="bi bi-cart" viewBox="0 0 20 20">
                                     <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
                                 </svg>
                             </a>
@@ -37,10 +39,9 @@
 
                     </ul>
                 </div>
-                    </ul>
-                </div>
             </div>
-            <partial name="_LoginPartial.cshtml" />
+            <partial name="_UserPartial.cshtml" />
+
         </nav>
         <div class="Categories border-bottom box-shadow">
             <ul class="CategoryNav">
@@ -98,9 +99,11 @@
             }
         </style>
         <div style="display: flex; position: fixed; z-index: 10000; height:100%; width: 0"  >
-            <button class="btn btn-warning rounded-circle" style="height:40px; width: 40px; font-size: 20px; align-self: center; transform: translateY(-40px)" type="button" data-bs-toggle="offcanvas" data-bs-target="#AdminControls" aria-controls="AdminControls">
-                <span id="control" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Admin Controls">+</span>
+            <div id="control" data-bs-custom-class="tooltip-arrow-auto" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Admin Controls" style="align-self: center; transform: translateY(-40px)">
+            <button class="btn btn-warning rounded-circle"  type="button" data-bs-toggle="offcanvas" data-bs-target="#AdminControls" aria-controls="AdminControls" style="height:40px; width: 40px; font-size: 20px; align-self: center;">
+                <span>+</span>
             </button>
+            </div>
             <div class="offcanvas offcanvas-start" style="background-color: #222831" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="AdminControls" aria-labelledby="AdminControlsLabel">
                 <div class="offcanvas-header">
                     <h4 class="offcanvas-title" id="AdminControlsLabel">Admin Controls</h4>
@@ -120,6 +123,10 @@
                 </div>
             </div>
         </div>
+        <script>
+            const element = document.querySelector('#control');
+            const tooltip = new bootstrap.Tooltip(element);
+        </script>
     }
 
     <div>
@@ -133,22 +140,15 @@
             &copy; 2024 - LiquorLand - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <!-- FBS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
 
-        const element = document.querySelector('#control');
-        const tooltip = new bootstrap.Tooltip(element);
-
         let clicker = null;
         let open = false;
-        document.getElementById("Beer").addEventListener("click", subNav)
-        document.getElementById("Wine").addEventListener("click", subNav)
-        document.getElementById("Whiskey").addEventListener("click", subNav)
+        $(document).on('click', '#Beer, #Wine, #Whiskey', subNav)
 
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
@@ -191,7 +191,6 @@
             }
             if(document.getElementById("SubNav").getAttribute("class").endsWith('collapse') && clicker !== this)
             {
-                console.log("234")
                 // If navbar is already open and a different category is clicked, toggle the navbar
                 $(document.getElementById("SubNav")).collapse("toggle");
             }
