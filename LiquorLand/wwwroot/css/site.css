@@ -8,6 +8,12 @@ html {
   }
 }
 
+.custom-img {
+    width: 150px;
+    height: 200px;
+    object-fit: contain;
+}
+
 html {
     position: relative;
     min-height: 100%;
@@ -15,7 +21,7 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    margin-bottom: 120px !important;
     color: #EEEEEE !important;
 }
 
@@ -83,7 +89,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 70px;
 }
 
-#productGallery{
+.productGallery{
     gap: 2px;
     width:90%;
     justify-content:center;
@@ -92,5 +98,118 @@ h1, h2, h3, h4, h5, h6 {
 .galleryContainer {
     transform: translateY(100px);
     display: flex;
+    flex-direction: row;
     justify-content: center;
+    padding-left: 2vw;
+    padding-right: 0vw;
+}
+
+.table-responsive {
+    max-height: 800px;
+}
+
+.description-cell {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.loadProducts {
+    width: 20vw;
+}
+
+.totalProducts{
+    color: black;
+    text-align: center;
+}
+
+#submitSearch[disabled] {
+    background-color: slategray;
+    color: black;
+}
+
+.HotProducts {
+    background-color: #EEEEEE;
+    opacity: 90%;
+    border: solid;
+    height: auto;
+    margin: 2vh;
+    border-radius: 30px;
+    border-color: #76ABAE;
+    filter: drop-shadow(0 10px 1rem black);
+    transition: all ease-in-out 300ms;
+    min-width: 4vw;
+    overflow-y: visible;
+}
+
+    .HotProducts:hover {
+        filter: drop-shadow(0 0 1.5rem #31363F)
+    }
+
+.HotProductsLabel {
+    text-align: center;
+    color: black;
+    font-size: 20px;
+    overflow-y: visible;
+    border-bottom: solid 1px;
+    filter: drop-shadow(0 0 1rem crimson)
+}
+
+.scrollable-container {
+    overflow-x: auto; /* allows horizontal scrolling */
+    overflow-y: visible;
+    width: 100%; /* ensure it spans the full width */
+    padding-top: 6.5vh;
+}
+
+.TopProducts {
+    display: inline-flex;
+    flex-wrap: nowrap; /* Prevent flex items from wrapping */
+    justify-content: space-evenly; /* maintain even spacing */
+    min-width: 100%;
+}
+
+.CategoriesBubbles{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10vw;
+    margin: 9vh;
+}
+
+.CategoryBubble{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all ease-in-out 250ms;
+}
+
+.CategoryBubble:hover {
+    transform: scale(120%);
+}
+
+.CategoryLabel {
+    font-family: sans-serif;
+    position: absolute;
+    bottom: 0;
+    opacity: 0;
+    transition: all ease-in-out 250ms;
+}
+
+.CategoryBubble:hover .CategoryLabel {
+    transform: translateY(3.1rem);
+    font-size: 1.5rem;
+    opacity: 100%;
+}
+
+.ShopAll {
+    font-family: sans-serif;
+    position: absolute;
+    opacity: 0;
+    transition: all ease-in-out 250ms;
+}
+
+.CategoryBubble:hover .ShopAll {
+    transform: translateY(-3.5rem);
+    font-size: 1.5rem;
+    opacity: 100%;
 }

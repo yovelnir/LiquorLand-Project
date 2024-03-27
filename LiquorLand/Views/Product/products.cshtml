@@ -4,7 +4,11 @@
 @model LiquorLand.Models.Product
 
 @{
-    string p100 = ((Model.ProductPrice / Model.Volume) * 100).ToString("0.00");
+    string p100 = "";
+    if(Model.Volume != 0)
+    {
+        p100 = ((Model.ProductPrice / Model.Volume) * 100).ToString("0.00");
+    }
 }
 <div>
     <div class="container mt-3">
@@ -20,7 +24,7 @@
                     }
             <div class="short-details">
                 <div class="image-container">
-                    <img src="@Model.ProductImage" class="img-fluid" style="width:30%; object-fit:contain;" />
+                    <img src="@Model.ProductImage" class="img-fluid" style="object-fit:contain;" />
                 </div>
                 <div class="product-info">
                     <div class="product-name-wrapper">

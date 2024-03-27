@@ -50,7 +50,7 @@ input[type="number"] {
                     <option selected disabled>Category</option>
                     <option value="Wine">Wine</option>
                     <option value="Beer">Beer</option>
-                    <option value="Whisky">Whisky</option>
+                    <option value="Whiskey">Whiskey</option>
                 </select>
                 <label asp-for="ProductCategory" class="control-label text-light">Product Category</label>
                 <span asp-validation-for="ProductCategory" class="text-danger"></span>
@@ -65,11 +65,11 @@ input[type="number"] {
             </div>
 
             <div class="input-group form-floating mb-1">
-                <input asp-for="AlcoholPercentage" type="number" min="0" step="0.1" class="form-control bg-black text-light" placeholder="al%"/>
+                <input asp-for="AlcoholPercentage" type="number" min="0" step="0.1" max="100" class="form-control bg-black text-light" placeholder="al%"/>
                 <label asp-for="AlcoholPercentage" class="control-label text-light">Alcohol Percentage</label>
                 <span class="input-group-text text-light" id="basic-addon1">%</span>
-                <span asp-validation-for="AlcoholPercentage" class="text-danger"></span>
             </div>
+            <span asp-validation-for="AlcoholPercentage" class="text-danger"></span>
 
             <div class="form-floating mb-1">
                 <input asp-for="Country" class="form-control bg-black text-light" placeholder="country"/>
@@ -120,7 +120,12 @@ input[type="number"] {
         </form>
     </div>
     <div class=col-md-4>
-        <img style="width:500px; height:500px; object-fit:contain" id="prodimg" src="https://media.istockphoto.com/id/1472933890/vector/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder.jpg?s=612x612&w=0&k=20&c=Rdn-lecwAj8ciQEccm0Ep2RX50FCuUJOaEM8qQjiLL0=" alt="Product Image" />
+        @if(Model.ProductImage != null){
+            <img style="width:500px; height:500px; object-fit:contain" id="prodimg" src="@Model.ProductImage" alt="Product Image" />
+        }
+        else{
+            <img style="width:500px; height:500px; object-fit:contain" id="prodimg" src="https://media.istockphoto.com/id/1472933890/vector/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder.jpg?s=612x612&w=0&k=20&c=Rdn-lecwAj8ciQEccm0Ep2RX50FCuUJOaEM8qQjiLL0=" alt="Product Image" />
+        }
     </div>
 </div>
 
@@ -139,28 +144,27 @@ input[type="number"] {
         prodimg.src = URL.createObjectURL(file)
       }
     }
-
-    document.getElementById("cat").addEventListener("change", subcategory)
-    function subcategory(){
-        var category = document.getElementById("cat").value
+    var catChange = false;
+    var subcategory = function(){
+        var category = $('#cat').val()
         var el = document.getElementById("subcat")
         el.innerHTML = "<option selected disabled>Sub Category</option>"
+
         if(category == "Wine"){
-            console.log('yaopoo')
             el.innerHTML += "<option value='Red'>Red</option>"
             el.innerHTML += "<option value='White'>White</option>"
             el.innerHTML += "<option value='Rose'>Rose</option>"
             el.innerHTML += "<option value='Sparkling'>Sparkling</option>"
             el.innerHTML += "<option value='Dessert'>Dessert</option>"
         }
-        if(category == "Beer"){
+        else if(category == "Beer"){
             el.innerHTML += "<option value='Lager'>Lager</option>"
             el.innerHTML += "<option value='Ale'>Ale</option>"
             el.innerHTML += "<option value='IPA'>IPA</option>"
             el.innerHTML += "<option value='Wheat'>Wheat</option>"
             el.innerHTML += "<option value='Cider'>Cider</option>"
         }
-        if(category == "Whisky"){
+        else if(category == "Whiskey"){
             el.innerHTML += "<option value='Bourbon'>Bourbon</option>"
             el.innerHTML += "<option value='Single Malt'>Single Malt</option>"
             el.innerHTML += "<option value='Blended'>Blended</option>"
@@ -169,5 +173,16 @@ input[type="number"] {
             el.innerHTML += "<option value='Irish'>Irish</option>"
             el.innerHTML += "<option value='Single Grain'>Single Grain</option>"
         }
+
+        if('@Model.ProductCategory' === category){
+            $('#subcat option[value="@Model.ProductSubCategory"]').prop('selected', true)
+        }
+        else{
+            $('#subcat option[value="@Model.ProductSubCategory"]').prop('selected', false)
+        }
     }
+
+    $('#cat').on('change', subcategory);
+
+    $(document).ready(subcategory);
 </script>

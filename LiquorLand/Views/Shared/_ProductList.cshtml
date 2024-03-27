@@ -12,7 +12,7 @@
         </tr>
         @foreach (Product p in Model.all_products)
         {
-            <tr id="@p.Serial">
+            <tr id="p|@p.Serial">
                 @foreach (var property in typeof(Product).GetProperties())
                 {
                     @if (property.Name == "ProductImage")
@@ -24,10 +24,17 @@
                         @if (property.Name == "Stock" && (int)property.GetValue(p) == 0)
                         {
                             <script>
-                                document.getElementById(@p.Serial).style="--bs-table-bg: rgba(255, 99, 71, 0.9);"
+                                document.getElementById("p|@p.Serial").style="--bs-table-bg: rgba(255, 99, 71, 0.9);"
                             </script>
                         }
-                        <td>@property.GetValue(p)</td>
+                        @if (property.Name == "ProductDescription")
+                        {
+                            <td><div class="description-cell">@property.GetValue(p)</div></td>
+                        }
+                        else
+                        {
+                            <td>@property.GetValue(p)</td>
+                        }
                     }
                 }
                 <td>
@@ -36,6 +43,14 @@
                         <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Order Stock">Order</button>
                         <button class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Product">X</button>
                     </div>
+                </td>
+            </tr>
+        }
+        @if (Model.total_products > Model.product_page * 10)
+        {
+            <tr>
+                <td colspan=14 class="LoadMore">
+                    <button class="btn btn-primary loadProducts">Load More Products</button>
                 </td>
             </tr>
         }

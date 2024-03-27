@@ -10,8 +10,6 @@ namespace LiquorLand.Models
 {
     public class ProductContext : DbContext
     {
-        internal readonly object HttpContext;
-
         public DbSet<Product> Products { get; set;}
 
         public ProductContext(DbContextOptions<ProductContext> options)
@@ -98,7 +96,7 @@ namespace LiquorLand.Models
 
         /*Product Description*/
         [Column(TypeName = "nvarchar(max)")]
-        [StringLength(100)]
+        [StringLength(2000)]
         public string ProductDescription { get; set; }
 
         /*Product Image Path*/
@@ -138,6 +136,8 @@ namespace LiquorLand.Models
 
         public void RemoveImage(string path)
         {
+            if (path == null || path.Contains("No_Image_Available.jpg"))
+                return;
             string deletePath = $"{Directory.GetCurrentDirectory()}\\wwwroot\\{path}";
 
             if(File.Exists(deletePath))

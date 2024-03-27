@@ -10,10 +10,6 @@ using NuGet.Protocol;
 using System.Diagnostics;
 
 
-
-
-
-
 namespace LiquorLand.Controllers
 {
     public class HomeController : Controller
@@ -37,8 +33,12 @@ namespace LiquorLand.Controllers
             ViewBag.bg = $"\\bg\\vid{num}.mp4";
             ViewBag.bgi = $"\\bg\\vid{num}.jpg";
 
+
             productViewModel products = new productViewModel();
             products.all_products = _productContext.Products.ToList<Product>();
+
+            products.hot_products = products.getHotProducts(_productContext);
+
             return View(products);
         }
 

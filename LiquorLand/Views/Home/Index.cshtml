@@ -5,15 +5,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-
-<style>
-    .custom-img {
-        width: 150px;
-        height: 200px;
-        object-fit: contain;
-    }
-</style>
-
 <div>
     <div class="top-container">
         <video class="back-video" autoplay loop muted plays-inline id="bgvid" poster="@ViewBag.bgi">
@@ -23,53 +14,90 @@
             <img src="/bg/logo.png" class="img-fluid card-img" />
         </div>
     </div>
-    <div class='galleryContainer'>
-        <div class="row g-0 mb-5" id="productGallery">
-            @foreach (Product p in Model.all_products)
-            {
-                <div class="col-md-3 overflow-visible m-2" style="width: 282.2px; margin-left: 10px;">
-                    <div class="card border-dark text-center rounded-5 align-items-center" style="background-color: #31363F; color: #EEEEEE;">
 
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a href=@Url.Action("Edit", "User", p) class="top-0 start-0 position-absolute border-hidden" style="transform:translate(10px,10px)">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                </svg>
-                            </a>
-                        }
-                        @if (p.Stock == 0)
-                        {
-                            <span class="badge rounded-3 text-bg-danger align-self-center fs-6 position-absolute" style="transform: translateY(150px);">Out of Stock</span>
-                        }
-                        @if (p.Stock < 10 && p.Stock != 0)
-                        {
-                            <span class="badge rounded-3 text-bg-danger align-self-center fs-6 position-absolute" style="transform: translateY(150px);">Only @p.Stock left!</span>
-                        }
-                        <form asp-action="productsShow" asp-controller="Product" method="post" asp-route-ProductName=@p.ProductName>
-                            <div class="transition ease-in duration-200 scale-110-hover">
-                                <input type="hidden" name="serial" value="@p.Serial" />
-                                <input type="image" src="@p.ProductImage" alt="Submit" class="img-fluid custom-img" style="transform: translateY(-100px)" />
-                            </div>
-                        </form>
-                        <h5 class="card-title">@p.ProductName</h5>
-                        <span class="border-top border-dashed border-light w-50"></span>
-                        <div class="card-body">
-                            <p class="card-text">@p.ProductSubCategory @p.ProductCategory</p>
-                            <p class="card-text"><span class="badge bg-primary">Price: </span>$@p.ProductPrice</p>
+    <div class="CategoriesBubbles">
+
+        <div class="CategoryBubble">
+            <label class="ShopAll">Shop All</label>
+            <label class="CategoryLabel">Beers</label>
+            <a href="@Url.Action("ProductGallery", "Product", new { category="Beer"})">
+                <img class="avatar avatar-xxl scale-125" src="/images/beerCategory.jpg" />
+            </a>
+        </div>
+
+        <div class="CategoryBubble">
+            <label class="ShopAll">Shop All</label>
+            <label class="CategoryLabel">Wines</label>
+            <a href="@Url.Action("ProductGallery", "Product", new { category="Wine"})">
+                <img class="avatar avatar-xxl scale-125" src="/images/wineCategory.jpg" />
+            </a>
+        </div>
+
+        <div class="CategoryBubble">
+            <label class="ShopAll">Shop All</label>
+            <label class="CategoryLabel">Whiskeys</label>
+            <a href="@Url.Action("ProductGallery", "Product", new { category="Whiskey"})">
+                <img class="avatar avatar-xxl scale-125" src="/images/whiskeyCategory.jpg" />
+            </a>
+        </div>
+
+    </div>
+
+    <div class="HotProducts">
+
+        <div class="HotProductsLabel">
+            &#128293; Hot Products &#128293;
+        </div>
+
+        <div class="scrollable-container">
+            <div class="TopProducts">
+                @foreach (Product p in Model.hot_products)
+                {
+                    <div class="col-md-3 overflow-visible m-2 productCard" style="width: 282.2px; margin-left: 10px;">
+                        <div class="card border-dark text-center rounded-5 align-items-center" style="background-color: #31363F; color: #EEEEEE;">
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a href=@Url.Action("Edit", "User", p) class="top-0 start-0 position-absolute border-hidden" style="transform:translate(10px,10px)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                    </svg>
+                                </a>
+                            }
                             @if (p.Stock == 0)
                             {
-                                <button class="btn btn-success rounded-3">Notify when back in stock</button>
+                                <span class="badge rounded-3 text-bg-danger align-self-center fs-6 position-absolute" style="transform: translateY(150px);">Out of Stock</span>
                             }
-                            else
+                            @if (p.Stock < 10 && p.Stock != 0)
                             {
-                                <button class="btn btn-warning rounded-3">Add to cart</button>
+                                <span class="badge rounded-3 text-bg-danger align-self-center fs-6 position-absolute" style="transform: translateY(150px);">Only @p.Stock left!</span>
                             }
+                            <a asp-action="productsShow" asp-controller="Product" asp-route-ProductName=@p.ProductName>
+                                <div class="transition ease-in duration-200 scale-110-hover">
+                                    <input type="hidden" name="serial" value="@p.Serial" />
+                                    <input type="image" src="@p.ProductImage" alt="Submit" class="custom-img" style="transform: translateY(-50px)" />
+                                </div>
+                            </a>
+                            <h5 class="card-title">@p.ProductName</h5>
+                            <span class="border-top border-dashed border-light w-50"></span>
+                            <div class="card-body">
+                                <p class="card-text">@p.ProductSubCategory @p.ProductCategory</p>
+                                <p class="card-text"><span class="badge bg-primary">Price: </span>$@p.ProductPrice</p>
+                                @if (p.Stock == 0)
+                                {
+                                    <button class="btn btn-success rounded-3">Notify when back in stock</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-warning rounded-3">Add to cart</button>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
+
         </div>
     </div>
 </div>

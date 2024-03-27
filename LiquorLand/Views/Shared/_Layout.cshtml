@@ -35,15 +35,12 @@
                             </a>
                             
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item justify-self-center">
                             <form asp-controller="Product" asp-action="searchProduct" method="get">
-                            <div class="input-group">
-                                <div class="form-outline" data-mdb-input-init>
-                                    <input type="search" id="form1" class="form-control" name="word" />
-                                    <label class="form-label" for="form1">Search</label>
-                                </div>
-                                <button type="submit" class="btn btn-primary" data-mdb-ripple-init>
-                                    <i class="fas fa-search"></i>
+                            <div class="input-group" data-mdb-input-init>
+                                <input type="search" id="productSearch" class="focus-ring focus-ring-light form-control" name="word" placeholder="Search"/>
+                                <button id="submitSearch" disabled type="submit" class="btn btn-primary">
+                                    <span>&#128269;</span>
                                 </button>
                             </div>
                         </form>
@@ -88,7 +85,7 @@
         <div class="collapse border-bottom" id="SubNav" data-bs-theme="dark">
             <div class="bg-secondary p-4" id="SubCat">
                 <ul class='CategoryNavList'>
-
+                    <!--Nav content dynamically updates when clicking related categories-->
                 </ul>
             </div>
         </div>
@@ -199,9 +196,9 @@
             else if(cat == "Whiskey")
             {
                 el.firstChild.innerHTML = ""
-                for(const sub of ["Bourbon", "Single Malt", "Blended", "American", "Japanese", "Irish", "Single Grain"]){
+                for(const sub of ["Bourbon", "Single+Malt", "Blended", "American", "Japanese", "Irish", "Single+Grain"]){
                     const url = "@Url.Action("ProductGallery", "Product", new { category="Whiskey", sub="text1" })".replace("text1", sub)
-                    el.firstChild.innerHTML += "<a href="+url+ " class='nav-item'>" + sub + "</a>"
+                    el.firstChild.innerHTML += "<a href="+url+ " class='nav-item'>" + sub.replace('+',' ') + "</a>"
                 }
             }
             if(document.getElementById("SubNav").getAttribute("class").endsWith('collapse') && clicker !== this)
@@ -216,6 +213,18 @@
             if(document.getElementById("SubNav").getAttribute("class").endsWith('collapse'))
                 open = false;
         }
+
+        $(document).ready(function() {
+            $('#productSearch').change(function() {
+                if($(this).val())
+                {
+                    $('#submitSearch').prop("disabled", false)
+                }
+                else{
+                    $('#submitSearch').prop("disabled", true)
+                }
+            });
+        });
     </script>
 </body>
 </html>
