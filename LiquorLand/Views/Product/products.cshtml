@@ -114,21 +114,4 @@
             </div>
         </div>
 
-        <script>
-            $(document).ready(function () {
-                // השמת אורך המלאי למשתנה stock
-                var stock = @Model.Stock;
-
-                // מאזין לשינוי בקלט של הכמות
-                $('.quantityInput').on('input', function () {
-                    // משים את הערך שהוכנס למשתנה quantity
-                    var quantity = parseInt($(this).val(), 10);
-                    // עדכון של ערך ה-max לערך הנוכחי של המלאי
-                    $(this).attr('max', stock - quantity);
-                });
-            });
-
-        </script>
-
-
     </div>
