@@ -274,7 +274,7 @@
             const modalBody = document.getElementById("modalbody")
             const modalRemove = document.getElementById("removebtn")
             const serial = $(this).parent()[0].id
-
+            
             modalBody.innerHTML = "<p>Are you sure you want to remove " + serial + "?</p>"
 
             modalRemove.href = "@Url.Action("RemoveProduct", "Product", new {serial = "text"})".replace("text", serial)
