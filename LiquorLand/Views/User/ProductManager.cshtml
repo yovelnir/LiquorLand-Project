@@ -1,6 +1,4 @@
 ﻿@model LiquorLand.ViewModels.productViewModel
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <style>
     .productManager {
@@ -30,7 +28,7 @@
         -moz-appearance: textfield;
     }
 
-    input{
+    input {
         width: 6vw;
     }
 </style>
@@ -68,6 +66,9 @@
         <button class="btn btn-warning rounded-pill" id="filterAll">Filter Products</button>
         <button class="btn btn-warning rounded-pill" id="clearAll">Clear All</button>
     </div>
+    <div class="totalProducts">
+        <span>Total Products in store: @Model.total_products</span>
+    </div>
     <div class="productTable">
         <table class="table text-center" style="--bs-table-border-color: black;">
             <tbody>
@@ -80,7 +81,7 @@
                 </tr>
                 @foreach (Product p in Model.all_products)
                 {
-                    <tr id="@p.Serial">
+                    <tr id="p|@p.Serial">
                         @foreach (var property in typeof(Product).GetProperties())
                         {
                             @if (property.Name == "ProductImage")
@@ -92,10 +93,17 @@
                                 @if (property.Name == "Stock" && (int)property.GetValue(p) == 0)
                                 {
                                     <script>
-                                        document.getElementById(@p.Serial).style="--bs-table-bg: rgba(255, 99, 71, 0.9);"
+                                        document.getElementById("p|@p.Serial").style="--bs-table-bg: rgba(255, 99, 71, 0.9);"
                                     </script>
                                 }
-                                <td>@property.GetValue(p)</td>
+                                @if (property.Name == "ProductDescription")
+                                {
+                                    <td><div class="description-cell">@property.GetValue(p)</div></td>
+                                }
+                                else
+                                {
+                                    <td>@property.GetValue(p)</td>
+                                }
                             }
                         }
                         <td>
@@ -109,115 +117,44 @@
                         </td>
                     </tr>
                 }
+                @if (Model.total_products > Model.product_page * 10)
+                {
+                    <tr>
+                        <td colspan=14 class="LoadMore">
+                            <button class="btn btn-primary loadProducts">Load More Products</button>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
 </div>
 <div class="modal fade" id="removeItem" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #31363F">
-      <div class="modal-header">
-        <h5 class="modal-title">Remove Product</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="modalbody">
-        
-      </div>
-      <div class="modal-footer align-items-center justify-content-center">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
-        <a id="removebtn" class="btn btn-danger">Remove</a>
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #31363F">
+            <div class="modal-header">
+                <h5 class="modal-title">Remove Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalbody">
+            </div>
+            <div class="modal-footer align-items-center justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                <a id="removebtn" class="btn btn-danger">Remove</a>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
     let tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     let tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    var page = 1;
+    var productAmount = 10;
 
     $(document).ready(function() {
-        $('#instock').change(function() {
-            var isInStock = $(this).is(':checked');
-
-            if(isInStock)
-                document.getElementById("outstock").disabled = true
-            else
-                document.getElementById("outstock").disabled = false
-
-            var filterData = {
-                serial: $('#serial').val(),
-                country: $('#country').val(),
-                maker: $('#maker').val(),
-                name: $('#name').val(),
-                instock: isInStock,
-                outstock: $('#outstock').is(':checked'),
-                category: $('#category').val(),
-                sub: $('#sub').val(),
-                price: $('#price').val(),
-                volume: $('#volume').val(),
-                alpercent: $('#alch').val(),
-                // Add other form parameters here
-            };
-
-            $.ajax({
-                url: '@Url.Action("FilterProductManager", "Product")',
-                type: 'GET',
-                data: filterData,
-                success: function(result) {
-                    // Replace the product list with filtered data
-                    $('.productTable').html(result);
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    alert('Error: ' + error);
-                }
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        $('#outstock').change(function() {
-            var outOfStock = $(this).is(':checked');
-
-            if(outOfStock)
-                document.getElementById("instock").disabled = true
-            else
-                document.getElementById("instock").disabled = false
-
-            var filterData = {
-                serial: $('#serial').val(),
-                country: $('#country').val(),
-                maker: $('#maker').val(),
-                name: $('#name').val(),
-                instock: $('#instock').is(':checked'),
-                outstock: outOfStock,
-                category: $('#category').val(),
-                sub: $('#sub').val(),
-                price: $('#price').val(),
-                volume: $('#volume').val(),
-                alpercent: $('#alch').val(),
-                // Add other form parameters here
-            };
-
-            $.ajax({
-                url: '@Url.Action("FilterProductManager", "Product")',
-                type: 'GET',
-                data: filterData,
-                success: function(result) {
-                    // Replace the product list with filtered data
-                    $('.productTable').html(result);
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    alert('Error: ' + error);
-                }
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        $('#filterAll').click(function() {
-            var filterData = {
+        function getFilterData(){
+            return {
                 serial: $('#serial').val(),
                 country: $('#country').val(),
                 maker: $('#maker').val(),
@@ -229,36 +166,84 @@
                 price: $('#price').val(),
                 volume: $('#volume').val(),
                 alpercent: $('#alch').val(),
+                page: page,
+                productAmount: 10,
                 // Add other form parameters here
             };
+        };
+
+        function applyFilter() {
+            // Determine the state of instock and outstock
+            var isInStock = $('#instock').is(':checked');
+            var outOfStock = $('#outstock').is(':checked');
+
+            // Disable or enable the opposite checkbox based on the current checkbox state
+            $('#instock').prop('disabled', outOfStock);
+            $('#outstock').prop('disabled', isInStock);
+
+            page = 1;
+            // Prepare the filter data
+            var filterData = getFilterData();
+
+            // Make the AJAX call
             $.ajax({
-                url: '@Url.Action("FilterProductManager", "Product")',
+                url: '@Url.Action("FilterProductManager", "Product")', // Make sure this URL is correct in your context
                 type: 'GET',
-                data: filterData,
+                data: {filterData: filterData},
                 success: function(result) {
                     // Replace the product list with filtered data
                     $('.productTable').html(result);
+                    $(".loadProducts").click(loadMore);
                 },
                 error: function(xhr, status, error) {
                     // Handle error
                     alert('Error: ' + error);
                 }
             });
-        });
-    });
+        };
+        // Bind the applyFilter function to change events of the checkboxes
+        $('#instock, #outstock').change(applyFilter);
 
-    $(document).ready(function() {
+        // Bind the applyFilter function to the click event of the button
+        $('#filterAll').click(applyFilter);
+
+        function loadMore(){
+            page++
+
+            filterData = getFilterData();
+
+            $.ajax({
+                url: '@Url.Action("FilterProductManager", "Product")',
+                type: 'Get',
+                data: {
+                    filterData: filterData,
+                },
+                success: function(result){
+                    $('.productTable').html(result);
+                    $(".loadProducts").click(loadMore);
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    alert('Error: ' + error);
+                }
+            })
+        };
+
+        $(".loadProducts").click(loadMore);
+
         $('#clearAll').click(function() {
             const inputs = document.querySelectorAll("input")
             for(const input of inputs){
                 input.value = null;
             }
+            page = 1;
             $.ajax({
                 url: '@Url.Action("FilterProductManager", "Product")',
                 type: 'GET',
                 success: function(result) {
                     // Replace the product list with filtered data
                     $('.productTable').html(result);
+                    $(".loadProducts").click(loadMore);
                 },
                 error: function(xhr, status, error) {
                     // Handle error
@@ -270,7 +255,6 @@
 
     $(document).ready(function() {
         $('.removeitem').click(function() {
-            console.log(322)
             const modalBody = document.getElementById("modalbody")
             const modalRemove = document.getElementById("removebtn")
             const serial = $(this).parent()[0].id
@@ -280,4 +264,6 @@
             modalRemove.href = "@Url.Action("RemoveProduct", "Product", new {serial = "text"})".replace("text", serial)
         });
     });
+
+
 </script>

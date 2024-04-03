@@ -1,16 +1,16 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - LiquorLand</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/sidenav.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/LiquorLand.styles.css" asp-append-version="true" />
     <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css" rel="stylesheet" integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4=" crossorigin="anonymous">
 </head>
 <body style="background-color: #222831;">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <header>
         <nav class="navbar w-100 navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #31363F;">
             <div class="container-fluid sticky-top">
@@ -27,6 +27,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item position-absolute" style="right: 10px">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="shoppingCarts">
+                                <svg xmlns="http://www.w3.org/2000/svg"  width="30" height="30" fill="currentColor" class="bi bi-cart" viewBox="0 0 20 20">
                         <li class="nav-item">
                             <div class="shopping-cart">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="shoppingCarts">
@@ -38,13 +41,21 @@
                             </a>
                             </div>
                         </li>
-
+                        <li class="nav-item justify-self-center">
+                            <form asp-controller="Product" asp-action="searchProduct" method="get">
+                            <div class="input-group" data-mdb-input-init>
+                                <input type="search" id="productSearch" class="focus-ring focus-ring-light form-control" name="word" placeholder="Search"/>
+                                <button id="submitSearch" disabled type="submit" class="btn btn-primary">
+                                    <span>&#128269;</span>
+                                </button>
+                            </div>
+                        </form>
+                        </li>
                     </ul>
                 </div>
-                   
-                
             </div>
-            <partial name="_LoginPartial.cshtml" />
+            <partial name="_UserPartial.cshtml" />
+
         </nav>
         <div class="Categories border-bottom box-shadow">
             <ul class="CategoryNav">
@@ -80,7 +91,7 @@
         <div class="collapse border-bottom" id="SubNav" data-bs-theme="dark">
             <div class="bg-secondary p-4" id="SubCat">
                 <ul class='CategoryNavList'>
-
+                    <!--Nav content dynamically updates when clicking related categories-->
                 </ul>
             </div>
         </div>
@@ -102,9 +113,11 @@
             }
         </style>
         <div style="display: flex; position: fixed; z-index: 10000; height:100%; width: 0"  >
-            <button class="btn btn-warning rounded-circle" style="height:40px; width: 40px; font-size: 20px; align-self: center; transform: translateY(-40px)" type="button" data-bs-toggle="offcanvas" data-bs-target="#AdminControls" aria-controls="AdminControls">
-                <span id="control" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Admin Controls">+</span>
+            <div id="control" data-bs-custom-class="tooltip-arrow-auto" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Admin Controls" style="align-self: center; transform: translateY(-40px)">
+            <button class="btn btn-warning rounded-circle"  type="button" data-bs-toggle="offcanvas" data-bs-target="#AdminControls" aria-controls="AdminControls" style="height:40px; width: 40px; font-size: 20px; align-self: center;">
+                <span>+</span>
             </button>
+            </div>
             <div class="offcanvas offcanvas-start" style="background-color: #222831" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="AdminControls" aria-labelledby="AdminControlsLabel">
                 <div class="offcanvas-header">
                     <h4 class="offcanvas-title" id="AdminControlsLabel">Admin Controls</h4>
@@ -124,6 +137,10 @@
                 </div>
             </div>
         </div>
+        <script>
+            const element = document.querySelector('#control');
+            const tooltip = new bootstrap.Tooltip(element);
+        </script>
     }
 
     <div class="alert alert-success" role="alert" id="alert-success">
@@ -163,22 +180,19 @@
             &copy; 2024 - LiquorLand - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <!-- FBS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
+    <!--<script>
+    document.getElementById("searchButton").addEventListener("click", function () {
+        var searchTerm = document.getElementById("form1").value;
+        window.location.href = "Url.Action("searchProduct", "Product")?word=" + searchTerm;});
+    </script>-->
     <script>
-
-        const element = document.querySelector('#control');
-        //const tooltip = new bootstrap.Tooltip(element);
 
         let clicker = null;
         let open = false;
-        document.getElementById("Beer").addEventListener("click", subNav)
-        document.getElementById("Wine").addEventListener("click", subNav)
-        document.getElementById("Whiskey").addEventListener("click", subNav)
+        $(document).on('click', '#Beer, #Wine, #Whiskey', subNav)
 
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
@@ -214,14 +228,13 @@
             else if(cat == "Whiskey")
             {
                 el.firstChild.innerHTML = ""
-                for(const sub of ["Bourbon", "Single Malt", "Blended", "American", "Japanese", "Irish", "Single Grain"]){
+                for(const sub of ["Bourbon", "Single+Malt", "Blended", "American", "Japanese", "Irish", "Single+Grain"]){
                     const url = "@Url.Action("ProductGallery", "Product", new { category="Whiskey", sub="text1" })".replace("text1", sub)
-                    el.firstChild.innerHTML += "<a href="+url+ " class='nav-item'>" + sub + "</a>"
+                    el.firstChild.innerHTML += "<a href="+url+ " class='nav-item'>" + sub.replace('+',' ') + "</a>"
                 }
             }
             if(document.getElementById("SubNav").getAttribute("class").endsWith('collapse') && clicker !== this)
             {
-                console.log("234")
                 // If navbar is already open and a different category is clicked, toggle the navbar
                 $(document.getElementById("SubNav")).collapse("toggle");
             }
@@ -232,6 +245,18 @@
             if(document.getElementById("SubNav").getAttribute("class").endsWith('collapse'))
                 open = false;
         }
+
+        $(document).ready(function() {
+            $('#productSearch').change(function() {
+                if($(this).val())
+                {
+                    $('#submitSearch').prop("disabled", false)
+                }
+                else{
+                    $('#submitSearch').prop("disabled", true)
+                }
+            });
+        });
     </script>
 
     <script>
