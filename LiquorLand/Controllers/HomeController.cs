@@ -60,54 +60,6 @@ namespace LiquorLand.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-
-
-        public IActionResult ViewCart()
-        {
-            //var cart = shoppingCarts.Get
-            return View();
-        }
-
-
-        public object addToCart(string serial)
-        {
-            // Retrieve ShoppingCart from session
-            var shoppingCartString = HttpContext.Session.GetString("cart");
-            ShoppingCart? shoppingCart = null;
-            if (shoppingCartString != null)
-                shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartString);
-            else
-                shoppingCart = new ShoppingCart();
-
-            if (shoppingCart != null)
-            {
-                Product? product = _productContext.Products.Find(serial);
-
-                if (product != null)
-
-                    HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
-
-            }
-            return RedirectToAction("Index", "home");
-        }
-
-        public IActionResult shoppingCarts()
-        {
-
-            var shoppingCartString = HttpContext.Session.GetString("cart");
-            ShoppingCart shoppingCart = null;
-            if (shoppingCartString != null)
-            {
-                shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartString);
-    
-            }
-            else
-                shoppingCart = new ShoppingCart();
-
-   
-            return View("shoppingCart", shoppingCart);
-        }
-
         public IActionResult updateProduct(string serial)
         {
             
