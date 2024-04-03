@@ -89,6 +89,15 @@ h1, h2, h3, h4, h5, h6 {
     height: 70px;
 }
 
+.productButtons{
+    transform: scale(0);
+    transition: all ease-in-out 150ms;
+}
+
+.productCard:hover .productButtons{
+    transform: scale(100%);
+}
+
 #alert-failure,
 #alert-success,
 #alertLimt {
@@ -123,7 +132,6 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     font-size: 80%;
     font-weight: bold;
-}
 }
 
 .productGallery{
@@ -249,8 +257,4 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(-3.5rem);
     font-size: 1.5rem;
     opacity: 100%;
-}
-
-i {
-    font-style: italic;
 }
