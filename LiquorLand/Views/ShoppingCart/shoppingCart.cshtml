@@ -6,13 +6,19 @@
 
 
 <div>
-    <h1 class="shop_titel">My Shopping Cart</h1>
+    <h1 class="shop_titel m-5">Your Shopping Cart</h1>
     <div class="cart-container">
         <div class="cart-items">
+            @if (Model.CartItems.Count == 0)
+            {
+                <div class="cart-item" style="height: 100px;">
+                    YOUR CART IS EMPTY FOOL
+                </div>
+            }
             @foreach (cartsItem p in Model.CartItems)
             {
                 <div class="cart-item" id="@p.cartItem.Serial">
-                    <a href="@Url.Action("Show", "Product", new { product = p.cartItem })">
+                    <a href="@Url.Action("productsShow", "Product", new { ProductName = p.cartItem.ProductName })">
                         <div class="item-details">
                             <img src="@p.cartItem.ProductImage" alt="Product Image" />
                         </div>

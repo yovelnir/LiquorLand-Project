@@ -88,6 +88,7 @@ h1, h2, h3, h4, h5, h6 {
 #SubCat{
     height: 70px;
 }
+
 #alert-failure,
 #alert-success,
 #alertLimt {
@@ -100,6 +101,8 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 8px;
     height: 10%;
     display: none;
+    z-index: 1000;
+    text-align:center;
 }
 
 .shopping-cart {
@@ -246,4 +249,8 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(-3.5rem);
     font-size: 1.5rem;
     opacity: 100%;
+}
+
+i {
+    font-style: italic;
 }

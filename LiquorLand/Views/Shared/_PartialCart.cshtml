@@ -1,6 +1,12 @@
 ﻿@model LiquorLand.Models.ShoppingCart
 <link href="~/css/shoppingcart.css" rel="stylesheet" />
 <div class="cart-items">
+    @if (Model.CartItems.Count == 0)
+    {
+        <div class="cart-item" style="height: 100px;">
+            YOUR CART IS EMPTY FOOL
+        </div>
+    }
     @foreach (cartsItem p in Model.CartItems)
     {
         <div class="cart-item" id="@p.cartItem.Serial">
@@ -67,7 +73,7 @@
                 url: '@Url.Action("plusItem", "ShoppingCart")',
                 data: { serial: serial, action: action },
                 success: async function (response) {
-                    if (response.success === false) { 
+                    if (response.success === false) {
                         $("#alert-failure").fadeIn().delay(100).fadeOut();
                         await itemCount();
                         $('.item-count').html(items);
@@ -78,7 +84,7 @@
                         $('.item-count').html(items);
                         $(".cart-container").html(response);
                     }
-                    
+
                 },
                 error: function (xhr, status, error) {
                     console.error(error);

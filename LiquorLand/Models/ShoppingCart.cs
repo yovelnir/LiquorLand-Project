@@ -15,10 +15,13 @@ namespace LiquorLand.Models
             var existingCartItem = CartItems.Find(item => item.cartItem.Serial == product.Serial);
             if (existingCartItem != null)
             {
-                existingCartItem.Quantity += quantity; 
+                existingCartItem.Quantity += quantity;
             }
             else
+            {
                 CartItems.Add(new cartsItem(product));
+                CartItems.Find(item => item.cartItem.Equals(product)).Quantity = quantity;
+            }
         }
         public void ClickPlus(Product product)
         {

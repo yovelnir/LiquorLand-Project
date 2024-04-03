@@ -85,7 +85,6 @@ namespace LiquorLand.Controllers
 
                 if (product != null)
 
-                    shoppingCart.AddToCart(product);
                     HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
 
             }
