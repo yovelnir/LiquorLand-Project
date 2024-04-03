@@ -50,7 +50,7 @@ input[type="number"] {
                     <option selected disabled>Category</option>
                     <option value="Wine">Wine</option>
                     <option value="Beer">Beer</option>
-                    <option value="Whisky">Whisky</option>
+                    <option value="Whiskey">Whiskey</option>
                 </select>
                 <label asp-for="ProductCategory" class="control-label text-light">Product Category</label>
                 <span asp-validation-for="ProductCategory" class="text-danger"></span>
@@ -65,11 +65,11 @@ input[type="number"] {
             </div>
 
             <div class="input-group form-floating mb-1">
-                <input asp-for="AlcoholPercentage" type="number" min="0" step="0.1" class="form-control bg-black text-light" placeholder="al%"/>
+                <input asp-for="AlcoholPercentage" type="number" min="0" step="0.1" max="100" class="form-control bg-black text-light" placeholder="al%"/>
                 <label asp-for="AlcoholPercentage" class="control-label text-light">Alcohol Percentage</label>
                 <span class="input-group-text text-light" id="basic-addon1">%</span>
-                <span asp-validation-for="AlcoholPercentage" class="text-danger"></span>
             </div>
+            <span asp-validation-for="AlcoholPercentage" class="text-danger"></span>
 
             <div class="form-floating mb-1">
                 <input asp-for="Country" class="form-control bg-black text-light" placeholder="country"/>
@@ -160,7 +160,7 @@ input[type="number"] {
             el.innerHTML += "<option value='Wheat'>Wheat</option>"
             el.innerHTML += "<option value='Cider'>Cider</option>"
         }
-        if(category == "Whisky"){
+        if(category == "Whiskey"){
             el.innerHTML += "<option value='Bourbon'>Bourbon</option>"
             el.innerHTML += "<option value='Single Malt'>Single Malt</option>"
             el.innerHTML += "<option value='Blended'>Blended</option>"

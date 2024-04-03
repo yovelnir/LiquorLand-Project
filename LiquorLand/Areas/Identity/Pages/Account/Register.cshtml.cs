@@ -103,13 +103,22 @@ namespace LiquorLand.Areas.Identity.Pages.Account
 
             [Display(Name = "Postal Code")]
             public string PostalCode { get; set; }
+
+            public bool partial { get; set; }
         }
 
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null, bool partial = false)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            if (partial)
+            {
+                return Partial("_RegisterPartial", this); // The name "_RegisterPartial" should match your partial view's file name.
+            }
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -153,6 +162,10 @@ namespace LiquorLand.Areas.Identity.Pages.Account
                         else
                         {
                             await _signInManager.SignInAsync(user, isPersistent: false);
+
+                            if(Input.partial)
+                                return new JsonResult(new { success = true, redirectUrl = returnUrl });
+
                             return LocalRedirect(returnUrl);
                         }
                     }
@@ -169,6 +182,10 @@ namespace LiquorLand.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
+            if (Input.partial)
+            {
+                return Partial("_RegisterPartial", this);
+            }
             return Page();
         }
 

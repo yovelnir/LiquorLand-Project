@@ -48,7 +48,10 @@ namespace LiquorLand.Controllers
                             await image.CopyToAsync(memoryStream);
                             product.ProductImage = await product.SaveImage(image);
                         }
-
+                    }
+                    else
+                    {
+                        product.ProductImage = Path.Combine("\\productImages", "No_Image_Available.jpg");
                     }
                     await _productContext.AddAsync(product);
                     await _productContext.SaveChangesAsync();
@@ -80,7 +83,7 @@ namespace LiquorLand.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> EditProduct(Product product, IFormFile image)
+        public async Task<IActionResult> EditProduct(Product product, IFormFile? image)
         {
             if(ModelState.IsValid)
             {
@@ -96,6 +99,11 @@ namespace LiquorLand.Controllers
                             product.ProductImage = await product.SaveImage(image);
                         }
                     }
+                    else
+                    {
+                        product.ProductImage = old_p.ProductImage;
+                    }
+                    product.SaleAmount = old_p.SaleAmount;
                     _productContext.Entry<Product>(old_p).CurrentValues.SetValues(product);
                 }
                 await _productContext.SaveChangesAsync();
@@ -106,11 +114,14 @@ namespace LiquorLand.Controllers
 
         //TO DO
         [Authorize(Roles = "Admin")]
+        [Route("Admin/ProductManager")]
         public IActionResult ProductManager()
         {
             productViewModel products = new productViewModel();
 
-            products.all_products = _productContext.Products.ToList<Product>();
+            products.total_products = _productContext.Products.Count();
+            products.all_products = _productContext.Products.Take(10).ToList<Product>();
+            products.product_page = 1;
 
             return View("ProductManager", products);
         }

@@ -58,3 +58,7 @@
 .serial, .unit-info {
     font-size: 14px;
 }
+
+.img-fluid{
+    max-width: 10vw;
+}

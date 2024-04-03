@@ -53,13 +53,20 @@ namespace LiquorLand.Areas.Identity.Pages.Account
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
+
+            public bool partial { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null, bool partial = false)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
+            }
+
+            if (partial)
+            {
+                return Partial("_LoginPartial", this);
             }
 
             returnUrl ??= Url.Content("~/");
@@ -70,6 +77,8 @@ namespace LiquorLand.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -85,6 +94,10 @@ namespace LiquorLand.Areas.Identity.Pages.Account
                 if(user == null)
                 {
                     ModelState.AddModelError(string.Empty, "Email does not exist.");
+                    if (Input.partial)
+                    {
+                        return Partial("_LoginPartial", this);
+                    }
                     return Page();
                 }
 
@@ -95,7 +108,11 @@ namespace LiquorLand.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    if (Input.partial)
+                    {
+                        return new JsonResult(new { success = true, redirectUrl = returnUrl });
+                    }
+                    return LocalRedirect("/");
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -109,11 +126,19 @@ namespace LiquorLand.Areas.Identity.Pages.Account
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    if (Input.partial)
+                    {
+                        return Partial("_LoginPartial", this);
+                    }
                     return Page();
                 }
             }
 
             // If we got this far, something failed, redisplay form
+            if (Input.partial)
+            {
+                return Partial("_LoginPartial", this);
+            }
             return Page();
         }
     }

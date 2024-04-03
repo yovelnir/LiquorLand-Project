@@ -1,0 +1,181 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using LiquorLand.Areas.Identity.Data
+
+@inject SignInManager<Users> SignInManager
+@inject UserManager<Users> UserManager
+
+<ul class="navbar-nav" style="transform: translate(-10px, -3px);">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        </li>
+        <li class="nav-item">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="logout" type="submit" data-bs-toggle="tooltip" data-bs-title="Logout" data-bs-custom-class="tooltip-arrow-auto" class="nav-link btn btn-link text-light">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z" />
+                        <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                    </svg>
+                </button>
+            </form>
+        </li>
+        <script>
+            const logoutel = document.querySelector('#logout');
+            const logOutTip = new bootstrap.Tooltip(logoutel);
+        </script>
+    }
+    else
+    {
+        <li id="userLogin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="tooltip-arrow-auto" data-bs-title="Login or Register" >
+            <a data-bs-toggle="modal" href=# data-bs-target="#registerModal" id="registerModalTrigger" class="nav-link text-light">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                </svg>
+            </a>
+        </li>
+
+        <script>
+            const userel = document.querySelector('#userLogin');
+            const userTip = new bootstrap.Tooltip(userel);
+        </script>
+    }
+</ul>
+
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #31363F">
+            <ul class="nav nav-tabs justify-content-center" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fs-3 text-light" id="login-tab" data-bs-toggle="tab" href="#login-tabpanel" role="tab" aria-controls="login-tabpanel" aria-selected="true">Login</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fs-3 text-light" id="register-tab" data-bs-toggle="tab" href="#register-tabpanel" role="tab" aria-controls="register-tabpanel" aria-selected="false">Register</button>
+                </li>
+                <li>
+                    <button type="button" class="btn-close top-0 end-0 position-absolute" data-bs-dismiss="modal" aria-label="Close"></button>
+                </li>
+            </ul>
+            <div class="tab-content pt-5" id="tab-content">
+                <div class="tab-pane active" id="login-tabpanel" role="tabpanel" aria-labelledby="login-tab">
+                    <div class="modal-body" id="loginModalBody">
+                        <!-- The partial view will be loaded here -->
+                    </div>
+                </div>
+                <div class="tab-pane" id="register-tabpanel" role="tabpanel" aria-labelledby="register-tab">
+                    <div class="modal-body" id="registerModalBody">
+                        <!-- The partial view will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    //Initial Ajax call for Login page when modal loads
+    $.ajax({
+        url: '/Login?partial=true', // Adjust the URL as needed
+        method: 'GET',
+        success: function(response) {
+            $('#loginModalBody').html(response);
+            loginFormSubmitHandler();
+        },
+        error: function(error) {
+            console.error('Error fetching register form:', error);
+        }
+    });
+
+    //Register Ajax handler
+    $(document).ready(function() {
+        // Load the register form into the modal when the trigger button is clicked
+        $('#register-tab').click(function() {
+            $.ajax({
+                url: '/Register?partial=true', // Adjust the URL as needed
+                method: 'GET',
+                success: function(response) {
+                    $('#registerModalBody').html(response);
+                    registerFormSubmitHandler();
+                },
+                error: function(error) {
+                    console.error('Error fetching register form:', error);
+                }
+            });
+        });
+    });
+
+    //Login Ajax handler
+    $(document).ready(function() {
+        // Load the register form into the modal when the trigger button is clicked
+        $('#login-tab').click(function() {
+            $.ajax({
+                url: '/Login?partial=true', // Adjust the URL as needed
+                method: 'GET',
+                success: function(response) {
+                    $('#loginModalBody').html(response);
+                    loginFormSubmitHandler();
+                },
+                error: function(error) {
+                    console.error('Error fetching register form:', error);
+                }
+            });
+        });
+    });
+
+    //Ajax handler for register form submition
+    function registerFormSubmitHandler() {
+        $(document).off('submit', '#registerForm').on('submit', '#registerForm', function(e) {
+            e.preventDefault();
+            var actionUrl = $(this).attr('action');
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: actionUrl,
+                type: 'POST',
+                data: formData,
+                success: function(response, status, xhr) {
+                    var contentType = xhr.getResponseHeader("Content-Type");
+
+                    if (contentType.indexOf("application/json") !== -1) {
+                        window.location.href = "/";
+                    } else {
+                        $('#registerModalBody').html(response); // Adjust as needed
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error: " + status + " " + error);
+                }
+            });
+        });
+    }
+
+    //Ajax handler for login form submition
+    function loginFormSubmitHandler() {
+        $(document).off('submit', '#account').on('submit', '#account', function(e) {
+            e.preventDefault();
+            var actionUrl = $(this).attr('action');
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: actionUrl,
+                type: 'POST',
+                data: formData,
+                success: function(response, status, xhr) {
+                    var contentType = xhr.getResponseHeader("Content-Type");
+
+                    if (contentType.indexOf("application/json") !== -1) {
+                        window.location.href = "/";
+                    } else {
+                        $('#loginModalBody').html(response); // Adjust as needed
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error: " + status + " " + error);
+                }
+            });
+        });
+    }
+</script>
