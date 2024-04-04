@@ -109,7 +109,6 @@ namespace LiquorLand.Controllers
                 await _productContext.SaveChangesAsync();
             }
 
-            //return Redirect($"/item/{product.ProductName}");//  didn`t work so i changed
             return RedirectToAction( "productsShow","Product", new { productName = product.ProductName });
         }
 
