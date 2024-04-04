@@ -27,13 +27,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item position-absolute" style="right: 10px">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="shoppingCarts">
-                                <svg xmlns="http://www.w3.org/2000/svg"  width="30" height="30" fill="currentColor" class="bi bi-cart" viewBox="0 0 20 20">
+                        <li class="nav-item">
+                            <div class="shopping-cart">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="shoppingCarts">
+                                <svg xmlns="http://www.w3.org/2000/svg"  width="30" height="30" fill="white" class="bi bi-cart" viewBox="0 0 20 20">
                                     <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
                                 </svg>
+                                  <span class="item-count" id="count_items"></span> 
                             </a>
-                            
+                            </div>
                         </li>
                         <li class="nav-item justify-self-center">
                             <form asp-controller="Product" asp-action="searchProduct" method="get">
@@ -137,6 +139,32 @@
         </script>
     }
 
+    <div class="alert alert-success bg-success" role="alert" id="alert-success">
+        <div class="d-flex gap-4">
+            <span><i class="fa-solid fa-circle-check icon-success"></i></span>
+            <div class="text-light">
+                The item has been successfully added to the shopping cart!
+            </div>
+        </div>
+    </div>
+    
+   <div class="alert alert-success bg-danger" role="alert" id="alert-failure"> 
+        <div class="d-flex gap-4">
+            <span><i class="fa-solid fa-circle-exclamation icon-danger"></i></span>
+            <div class="d-flex flex-column gap-2">
+            <h6 class="mb-0">There are no more items in the store.</h6>
+            </div>
+        </div>
+   </div>
+    <div class="alert alert-success bg-danger" role="alert" id="alertLimt">
+        <div class="d-flex gap-4">
+            <span><i class="fa-solid fa-circle-exclamation icon-danger"></i></span>
+            <div class="d-flex flex-column gap-2">
+                <h6 class="mb-0">You have reached the maximum number of items in the store.</h6>
+            </div>
+        </div>
+    </div>
+
     <div>
         <main role="main" class="pb-3">
             @RenderBody()
@@ -213,6 +241,63 @@
             if(document.getElementById("SubNav").getAttribute("class").endsWith('collapse'))
                 open = false;
         }
+    </script>
+
+    <script>
+        var items = 0;
+         $(document).ready(async function () {
+            await itemCount();
+            $('.item-count').html(items);
+        })
+
+        $(document).ready(function () {
+            $('.addToCartButton').click(async function () {
+                var serial = $(this).data('serial');
+                var input = $('.quantityInput').val();
+                var quantity;
+
+                if (input > 1) {
+                    quantity = parseInt(input, 10);
+                }
+                else {
+                    quantity = 1;
+                }
+               await $.ajax({
+                    type: "GET",
+                    async: true,
+                    url: "@Url.Action("addToCart", "ShoppingCart")",
+                    data: { serial: serial,quantity: quantity },
+                    success: async function (response) {
+                        if (response.success) 
+                        {
+                            $('#alert-success').fadeIn().delay(800).fadeOut();
+                            await itemCount();
+                            $('.item-count').html(items);
+                        } 
+                       else 
+                       {
+                            $('#alert-failure').fadeIn().delay(800).fadeOut();
+                       }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+
+        async function itemCount() {
+            await $.ajax({
+                type: "GET",
+                url: "@Url.Action("CountItems", "ShoppingCart")",
+                success: function (response) {
+                    items = response;
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
 
         $(document).ready(function() {
             $('#productSearch').change(function() {
@@ -226,5 +311,6 @@
             });
         });
     </script>
+
 </body>
 </html>

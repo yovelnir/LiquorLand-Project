@@ -107,9 +107,6 @@ namespace LiquorLand.Models
         [Column(TypeName = "int")]
         public int? SaleAmount { get; set; }
 
-
-
-
         public async Task<string> SaveImage(IFormFile image)
         {
             // Generate a unique file name

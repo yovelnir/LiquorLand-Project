@@ -1,0 +1,14 @@
+﻿.loginOptions {
+    margin-top: 1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loginOptions a {
+    color: white;
+}
+
+.loginOptions a:hover {
+    color: deepskyblue;
+}

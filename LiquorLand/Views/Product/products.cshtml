@@ -1,5 +1,6 @@
 ﻿<header>
     <link rel="stylesheet" href="~/css/product.css" asp-append-version="true" />
+    <link href="~/css/site.css" rel="stylesheet" />
 </header>
 @model LiquorLand.Models.Product
 
@@ -61,10 +62,10 @@
                                 <span class="badge rounded-5 text-bg-danger fs-5 w-25">Only @Model.Stock left!</span>
                             }
                             <div class="form-floating mb-1">
-                                <input class="form-control" type="number" step="1" min="1" max="@Model.Stock" style="width: 30%;" aria-required="true" placeholder="Quantity"/>
+                                <input class="form-control quantityInput" type="number" step="1" min="1" max="@Model.Stock" style="width: 30%;" aria-required="true" placeholder="Quantity" />
                                 <label>Quantity</label>
                             </div>
-                            <button class="btn btn-warning rounded-5 shadow-md">Add To Cart</button>
+                            <button class="btn btn-warning rounded-5 shadow-md addToCartButton" data-serial="@Model.Serial">Add To Cart</button>
                             <button class="btn btn-info rounded-5 shadow-md">Buy Now</button>
                         }
                     </div>
@@ -119,3 +120,4 @@
     </div>
 </div>
 
+    </div>

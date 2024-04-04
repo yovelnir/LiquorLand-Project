@@ -1,0 +1,126 @@
+﻿@using Microsoft.AspNetCore.Http
+@model LiquorLand.Models.ShoppingCart
+<link href="~/css/shoppingCart.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+
+<div>
+    <h1 class="shop_titel m-5">Your Shopping Cart</h1>
+    <div class="cart-container">
+        <div class="cart-items">
+            @if (Model.CartItems.Count == 0)
+            {
+                <div class="cart-item" style="height: 100px;">
+                    YOUR CART IS EMPTY FOOL
+                </div>
+            }
+            @foreach (cartsItem p in Model.CartItems)
+            {
+                <div class="cart-item" id="@p.cartItem.Serial">
+                    <a href="@Url.Action("productsShow", "Product", new { ProductName = p.cartItem.ProductName })">
+                        <div class="item-details">
+                            <img src="@p.cartItem.ProductImage" alt="Product Image" />
+                        </div>
+                    </a>
+                    <div class="item-info">
+                        <h3>@p.cartItem.ProductName</h3>
+                    </div>
+
+                    <div class="quantity">
+                        <button class="btn btn-link minus_button" id="minus_button" data-serial="@p.cartItem.Serial">-</button>
+                        <input id="quantity-value" type="number" min="0" max="@p.cartItem.Stock" class="small-input" value="@p.Quantity" />
+                        <button class="btn btn-link plus_button" id="plus_button" data-serial="@p.cartItem.Serial">+</button>
+                    </div>
+
+                    <div class="item-price">$@p.cartItem.ProductPrice</div>
+                    <div class="total-price">$@(p.cartItem.ProductPrice * p.Quantity)</div>
+                    <div>
+                        <button type="button" class="btn-close remove_item" data-serial="@p.cartItem.Serial" />
+                    </div>
+                </div>
+
+            }
+
+            <div class="cart-summary">
+                <div class="checkout-btn">
+                    <div class="total">
+                        Total: $@Model.GetTotal()
+                    </div>
+                </div>
+                <button class="checkout-btn">Checkout</button>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <script>
+
+        $(document).ready(function () {
+            $('.remove_item').click(function () {
+                var serial = $(this).data('serial');
+
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("RemoveItem", "ShoppingCart")",
+                    data: { serial: serial },
+                    success: async function (response) {
+                        await itemCount();
+                        $('.item-count').html(items);
+                        $(".cart-container").html(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            function updateQuantity(serial, action) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("plusItem", "ShoppingCart")',
+                    data: { serial: serial, action: action },
+                    success: async function (response) {
+                        if (response.success === false) {
+                            $("#alert-failure").fadeIn().delay(100).fadeOut();
+                            await itemCount();
+                            $('.item-count').html(items);
+                            $(".cart-container").load("@Url.Action("shoppingCarts", "ShoppingCart")", { partial: true });
+
+                        }
+                        else {
+                            await itemCount();
+                            $('.item-count').html(items);
+                            $(".cart-container").html(response);
+                        }
+
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            };
+
+            $('.plus_button').click(function () {
+                var serial = $(this).data('serial');
+                updateQuantity(serial, true);
+            });
+
+            $('.minus_button').click(function () {
+                var serial = $(this).data('serial');
+                updateQuantity(serial, false);
+            });
+        });
+
+    </script>
+
+</div>
+
+
