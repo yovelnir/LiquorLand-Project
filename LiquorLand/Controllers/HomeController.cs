@@ -8,14 +8,17 @@ using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using System.Diagnostics;
+=========
+using System.Diagnostics.Tracing;
+>>>>>>>>> Temporary merge branch 2
 
 
 namespace LiquorLand.Controllers
 {
     public class HomeController : Controller
-    {
-        private readonly ILogger<HomeController> _logger;
-        private readonly ProductContext _productContext;
+        private ShoppingCart cart = new ShoppingCart();
+
+        
         private ShoppingCart cart = new ShoppingCart();
 
         
