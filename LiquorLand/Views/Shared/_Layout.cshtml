@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using LiquorLand.Areas.Identity.Data
+
+@inject SignInManager<Users> SignInManager
+@inject UserManager<Users> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -92,7 +98,12 @@
             </div>
         </div>
     </header>
-    
+
+    @if (!SignInManager.IsSignedIn(User) && !Context.Request.Cookies.ContainsKey("ageVerified"))
+    {
+        <partial name="_ageCheck.cshtml" />
+    }
+
     @if(User.IsInRole("Admin"))
     {
         <style>

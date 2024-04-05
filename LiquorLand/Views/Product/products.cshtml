@@ -61,12 +61,15 @@
                             {
                                 <span class="badge rounded-5 text-bg-danger fs-5 w-25">Only @Model.Stock left!</span>
                             }
-                            <div class="form-floating mb-1">
-                                <input class="form-control quantityInput" type="number" step="1" min="1" max="@Model.Stock" style="width: 30%;" aria-required="true" placeholder="Quantity" />
+                            <div class="form-floating mb-1 quantityTab">
+                                <input class="form-control quantityInput" type="number" step="1" min="1" max="@Model.Stock" style="width: 30%;" aria-required="true" placeholder="Quantity" value="1" />
                                 <label>Quantity</label>
+                                <span id="overQuantity" class="alert alert-success" role="alert">Maximum available stock is @Model.Stock</span>
                             </div>
-                            <button class="btn btn-warning rounded-5 shadow-md addToCartButton" data-serial="@Model.Serial">Add To Cart</button>
-                            <button class="btn btn-info rounded-5 shadow-md">Buy Now</button>
+                            <div class="shopButtons">
+                                <button class="btn btn-warning rounded-5 shadow-md addToCartButton" data-serial="@Model.Serial">Add To Cart</button>
+                                <button class="btn btn-info rounded-5 shadow-md">Buy Now</button>
+                            </div>
                         }
                     </div>
                 </div>
@@ -120,4 +123,32 @@
     </div>
 </div>
 
-    </div>
+<script>
+    $(document).ready(function() {
+        $("#overQuantity").hide();
+        $(".quantityInput").keypress(function(e){
+            var char = String.fromCharCode(e.which);
+            var currentValue = $(this).val();
+            var reg = new RegExp("^[0-9]");
+
+            var selection = document.getSelection().toString();
+            if(!reg.test(String.fromCharCode(e.which))){
+                e.preventDefault();
+            }
+        })
+        $(".quantityInput").keyup(function() {
+            while($(this).val().startsWith("0"))
+                $(this).val($(this).val().slice(1));
+
+            if($(this).val() === "")
+                $(this).val(1);
+
+            if($(this).val() > @Model.Stock)
+            {
+                $(this).val(@Model.Stock);
+                if(!$("#overQuantity").is(":visible"))
+                    $("#overQuantity").fadeIn().delay(800).fadeOut();
+            }
+        })
+    })
+</script>

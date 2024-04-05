@@ -37,7 +37,7 @@ namespace LiquorLand.Controllers
 
                 if (c != null)
                 {
-                    if (p.Stock > c.Quantity)
+                    if (p.Stock >= c.Quantity + quantity)
                     {
                         shoppingCart.AddToCart(c.cartItem, quantity); 
                         HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
@@ -130,6 +130,43 @@ namespace LiquorLand.Controllers
             }
             return shoppingCarts(true);
         }
+
+        public IActionResult quantityChange(string serial, int quantity)
+        {
+            var shoppingCartString = HttpContext.Session.GetString("cart");
+            ShoppingCart? shoppingCart = null;
+            Product? p = _productContext.Products.Find(serial);
+            if (shoppingCartString != null)
+                shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartString);
+
+            if (shoppingCart != null)
+            {
+                cartsItem? c = shoppingCart.CartItems.Find(item => item.cartItem.Serial == serial);
+
+                if(quantity == 0)
+                {
+                    return RemoveItem(serial);
+                }
+
+                if (c != null && p != null)
+                {
+                    if(quantity > c.Quantity)
+                    {
+                        while(c.Quantity < p.Stock && c.Quantity < quantity)
+                        {
+                            c.Quantity++;
+                        }
+                    }
+                    else
+                    {
+                        c.Quantity = quantity;
+                    }
+                    HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
+                }
+            }
+            return shoppingCarts(true);
+        }
+
         public IActionResult shoppingCarts(bool partial = false)
         {
             var shoppingCartString = HttpContext.Session.GetString("cart");

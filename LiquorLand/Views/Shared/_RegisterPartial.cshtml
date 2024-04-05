@@ -6,7 +6,7 @@
     <div id="validationSummary" class="text-danger"></div>
     <div class="">
         <form class="row justify-content-center" id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2 class="text-center mb-5 mt-5">Create a new account.</h2>
+            <h2 class="mb-5 mt-5">Create a new account.</h2>
             <hr />
             <div class="col-6">
                 <div class="form-floating mb-1">
@@ -42,8 +42,8 @@
 
             </div>
 
-            <div class="col-6">
-                <h2>Add additional details</h2>
+            <div class="col-6 d-flex justify-content-center align-items-center flex-column">
+                <h4>Add additional details</h4>
                 <div class="form-floating mb-1">
                     <input asp-for="Input.Country" class="form-control" autocomplete="country-name" aria-required="true" placeholder="Country" />
                     <label asp-for="Input.Country" class="text-black">Country</label>
