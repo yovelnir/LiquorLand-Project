@@ -3,6 +3,7 @@ using LiquorLand.Controllers;
 using LiquorLand.ViewModels;
 using Newtonsoft.Json;
 using System.Timers;
+using Braintree;
 
 namespace LiquorLand.Models
 {
@@ -10,6 +11,14 @@ namespace LiquorLand.Models
     {
         public List<cartsItem> CartItems = new List<cartsItem>();
 
+        /*public ActionResult Payment(EditContainerViewModel newEdit)
+        {
+
+            //generate client token
+            newEdit.PaymentInfo.ClientToken = PaymentConstants.Gateway.ClientToken.generate();
+
+            return View(newEdit);
+        }*/
         public void AddToCart(Product product, int quantity) 
         {
             var existingCartItem = CartItems.Find(item => item.cartItem.Serial == product.Serial);
@@ -95,4 +104,6 @@ namespace LiquorLand.Models
 
 
     }
+
+
 }

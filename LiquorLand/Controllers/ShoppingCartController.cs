@@ -5,6 +5,13 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
+//see what we can remove
+using Braintree;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+
 
 namespace LiquorLand.Controllers
 {
@@ -12,6 +19,7 @@ namespace LiquorLand.Controllers
     {
         private ShoppingCart shoppingCart;
         public readonly ProductContext _productContext;
+       
 
         public ShoppingCartController(ProductContext productContext)
         {
@@ -169,6 +177,7 @@ namespace LiquorLand.Controllers
             }
             return shoppingCarts(true);
         }
+
 
     }
 }
