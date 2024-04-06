@@ -13,6 +13,7 @@ using System.Linq;
 
 
 
+
 namespace LiquorLand.Controllers
 {
     public class ShoppingCartController : Controller
@@ -176,6 +177,38 @@ namespace LiquorLand.Controllers
                 }
             }
             return shoppingCarts(true);
+        }
+
+        public async Task<IActionResult> removeCart(Order order)
+        {
+            Product? product = null;
+            var shoppingCartString = HttpContext.Session.GetString("cart");
+            ShoppingCart? shoppingCart = null;
+
+
+            if (shoppingCartString != null)
+            {
+                shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartString);
+            }
+            if(shoppingCart != null)
+            {
+                foreach (cartsItem item in shoppingCart.CartItems)
+                {
+                    product = _productContext.Products.Find(item.cartItem.Serial);
+                    if (product != null)
+                    {
+                        product.SaleAmount += item.Quantity;
+                        product.Stock -= item.Quantity;
+                        _productContext.Products.Update(product);
+                        await _productContext.SaveChangesAsync();
+                    }    
+                }
+                
+                shoppingCart.CartItems.Clear();
+                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
+            }
+            //return View("shoppingCart", shoppingCart);
+            return RedirectToAction("successPayment", "BrainTree", order);
         }
 
 

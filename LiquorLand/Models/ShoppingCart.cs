@@ -4,21 +4,13 @@ using LiquorLand.ViewModels;
 using Newtonsoft.Json;
 using System.Timers;
 using Braintree;
+using System.Collections.Generic;
 
 namespace LiquorLand.Models
 {
     public class ShoppingCart
     {
         public List<cartsItem> CartItems = new List<cartsItem>();
-
-        /*public ActionResult Payment(EditContainerViewModel newEdit)
-        {
-
-            //generate client token
-            newEdit.PaymentInfo.ClientToken = PaymentConstants.Gateway.ClientToken.generate();
-
-            return View(newEdit);
-        }*/
         public void AddToCart(Product product, int quantity) 
         {
             var existingCartItem = CartItems.Find(item => item.cartItem.Serial == product.Serial);
@@ -88,7 +80,10 @@ namespace LiquorLand.Models
             return total ?? decimal.Zero;
         }
 
-
+        internal void RemoveItem(string serial)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class cartsItem

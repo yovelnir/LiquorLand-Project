@@ -16,6 +16,9 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 builder.Services.AddDbContext<ProductContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddDbContext<OrderContext>(options =>
+    options.UseSqlServer(connectionString));
+
 builder.Services.AddDefaultIdentity<Users>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<UserDbContext>();
