@@ -85,7 +85,7 @@ namespace LiquorLand.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditProduct(Product product, IFormFile? image)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 Product? old_p = await _productContext.Products.FindAsync(product.Serial);
                 if (old_p != null)
@@ -109,7 +109,7 @@ namespace LiquorLand.Controllers
                 await _productContext.SaveChangesAsync();
             }
 
-            return Redirect($"/item/{product.ProductName}");
+            return RedirectToAction( "productsShow","Product", new { productName = product.ProductName });
         }
 
         //TO DO

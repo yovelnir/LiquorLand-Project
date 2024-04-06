@@ -48,7 +48,12 @@
                         Total: $@Model.GetTotal()
                     </div>
                 </div>
-                <button class="checkout-btn">Checkout</button>
+                @if(Model.GetTotal() != 0)
+                {
+                    <a asp-area="" asp-action="GenerateToken" asp-controller="BrainTree">
+                        <button type="button" class="checkout-btn">Checkout</button>
+                    </a>
+                } 
             </div>
         </div>
 
