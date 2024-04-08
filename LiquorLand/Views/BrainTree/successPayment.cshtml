@@ -1,8 +1,8 @@
 ﻿@model List<LiquorLand.Models.cartsItem>
 <link href="~/css/shoppingCart.css" rel="stylesheet" />
-<div> good pay good job <a asp-area="" asp-action="Index" asp-controller="Home">
-    <button>ok back to home page</button>
-    </a>
+
+<div> 
+    <h1>Thank you for your purchase here`s the details:</h1>
 
     <div class="cart-container">
         <div class="cart-items">
@@ -32,6 +32,9 @@
                         Total: $@ViewBag.totalPrice
                     </div>
                 </div>
+                <a asp-area="" asp-action="Index" asp-controller="Home">
+                    <button type="button" class="checkout-btn">Back to Home page</button>
+                </a>
             </div>
         </div>
 </div>

@@ -32,7 +32,7 @@ namespace LiquorLand.Controllers
             var gateway =_brain.GetGateway();
             var clientToken = gateway.ClientToken.Generate();
             ViewBag.ClientToken = clientToken;
- 
+            
             return View();
         }
 
@@ -52,29 +52,21 @@ namespace LiquorLand.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public IActionResult GenerateToken(IFormCollection collections)
         {
             decimal amount = 0;
             ShoppingCart? shoppingCart = httpCart();
-            /*         var shoppingCartString = HttpContext.Session.GetString("cart");
-
-
-                     if (shoppingCartString != null)
-                     {
-                         shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartString); }*/
             if (shoppingCart != null)
             {
                 amount = shoppingCart.GetTotal();
             }
 
-            //ShoppingCart totalFee;
             string nonceFormClient = collections["payment_method_nonce"];
             var request = new TransactionRequest
             {
                 Amount = amount,    
                 PaymentMethodNonce = nonceFormClient,
-                OrderId = "55501",
+                OrderId = (_orderContext.orders.Count<Order>()+1).ToString(),
                 Options = new TransactionOptionsRequest
                 {
                     SubmitForSettlement = true
@@ -84,10 +76,16 @@ namespace LiquorLand.Controllers
             Result<Transaction> result = gateway.Transaction.Sale(request);
             if(result.Target.ProcessorResponseText == "Approved")
             {
-                //TempData["Success"] = "Transaction was succssful , Amount Charged: $" + result.Target.Amount;
+                TempData["Success"] = "Transaction was succssful , Amount Charged: $" + result.Target.Amount;
                return RedirectToAction("AddOrder");
             }
-            return RedirectToAction("GenerateToken");
+            else
+            {
+                // Payment failed
+                TempData["Error"] = "Payment failed: " + result.Message;
+                return RedirectToAction("GenerateToken");
+                
+            }
         }
 
         public async Task<IActionResult> AddOrder()
