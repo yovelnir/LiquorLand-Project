@@ -126,6 +126,7 @@ namespace LiquorLand.Controllers
                 Items.Find(item => item.cartItem.Equals(product)).Quantity = entry.Value;
             }
             ViewBag.totalPrice = order.totalPrice;
+            ViewBag.orderNumber = order.OrderId;
             return View("successPayment", Items);
         }
     }
