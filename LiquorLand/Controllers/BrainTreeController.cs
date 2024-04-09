@@ -56,6 +56,7 @@ namespace LiquorLand.Controllers
         {
             decimal amount = 0;
             ShoppingCart? shoppingCart = httpCart();
+            ViewBag.flag = false;
             if (shoppingCart != null)
             {
                 amount = shoppingCart.GetTotal();
@@ -77,6 +78,7 @@ namespace LiquorLand.Controllers
             if(result.Target.ProcessorResponseText == "Approved")
             {
                 TempData["Success"] = "Transaction was succssful , Amount Charged: $" + result.Target.Amount;
+                ViewBag.flag= true;
                return RedirectToAction("AddOrder");
             }
             else

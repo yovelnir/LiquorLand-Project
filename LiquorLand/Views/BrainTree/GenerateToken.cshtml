@@ -11,7 +11,11 @@
                 </div>
             </section>
             <input id="nonce" name="payment_method_nonce" type="hidden" />
-            <button class="button" id="submit-button"> <span>Pay</span></button>
+            @if(@ViewBag.flag != true)
+            {
+                <button class="button" id="submit-button"> <span>Pay</span></button>
+            }
+            
         </div>
     </div>
 </form>
