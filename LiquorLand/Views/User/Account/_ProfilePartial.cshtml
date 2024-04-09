@@ -1,38 +1,31 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using LiquorLand.Areas.Identity.Data
-
-@inject UserManager<Users> UserManager
-
-@{
-    var user = await UserManager.GetUserAsync(User);
-}
+﻿@model LiquorLand.Areas.Identity.Data.Users
 
 <div class="profileDetails">
     <form method="POST" id="detailsEdit" action=@Url.Action("EditDetails", "User")>
         <div class="container Details">
             <div class="userDetail" id="username">
                 <label>Username:</label>
-                <span>@user.UserName</span>
+                <span>@Model.UserName</span>
             </div>
             <div class="row">
                 <div class="col col-sm-12 col-md-12 col-lg-6 userDetail">
                     <label class="inputlabel">Email:</label>
-                    <input class="inputfield" disabled id="email" value="@user.Email" name="email" type="email" autocomplete="email" />
+                    <input class="inputfield" disabled id="email" value="@Model.Email" name="email" type="email" autocomplete="email" />
                 </div>
                 <div class="col col-sm-12 col-md-6 col-lg-6 userDetail">
                     <label class="inputlabel">Phone:</label>
-                    <input class="inputfield" disabled id="phone" value="@user.PhoneNumber" name="phone" type="tel" autocomplete="tel" />
+                    <input class="inputfield" disabled id="phone" value="@Model.PhoneNumber" name="phone" type="tel" autocomplete="tel" />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col col-sm-12 col-md-6 col-lg-6 userDetail">
                     <label class="inputlabel">First Name:</label>
-                    <input class="inputfield" disabled id="fname" value="@user.FirstName" name="fname" type="text" autocomplete="given-name" />
+                    <input class="inputfield" disabled id="fname" value="@Model.FirstName" name="fname" type="text" autocomplete="given-name" />
                 </div>
                 <div class="col col-sm-12 col-md-6 col-lg-6 userDetail">
                     <label class="inputlabel">Last Name:</label>
-                    <input class="inputfield" disabled id="lname" value="@user.LastName" name="lname" type="text" autocomplete="family-name" />
+                    <input class="inputfield" disabled id="lname" value="@Model.LastName" name="lname" type="text" autocomplete="family-name" />
                 </div>
             </div>
 
@@ -69,10 +62,10 @@
             else
             {
                 $("#edittext").html("Edit");
-                $("#email").prop("value", "@user.Email");
-                $("#phone").prop("value", "@user.PhoneNumber");
-                $("#fname").prop("value", "@user.FirstName");
-                $("#lname").prop("value", "@user.LastName");
+                $("#email").prop("value", "@Model.Email");
+                $("#phone").prop("value", "@Model.PhoneNumber");
+                $("#fname").prop("value", "@Model.FirstName");
+                $("#lname").prop("value", "@Model.LastName");
             }
         });
     });

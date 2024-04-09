@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LiquorLand.Migrations.Order
 {
     [DbContext(typeof(OrderContext))]
-    [Migration("20240406175231_order")]
+    [Migration("20240409094410_order")]
     partial class order
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -7,6 +7,7 @@ using LiquorLand.Areas.Identity.Data;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Drawing;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace LiquorLand.Controllers
 {
@@ -14,11 +15,13 @@ namespace LiquorLand.Controllers
     {
         private readonly ProductContext _productContext;
         private readonly UserManager<Users> _userManager;
+        private readonly OrderContext _orderContext;
 
-        public UserController(ProductContext productContext, UserManager<Users> userManager)
+        public UserController(ProductContext productContext, UserManager<Users> userManager, OrderContext orderContext)
         {
             _productContext = productContext;
             _userManager = userManager;
+            _orderContext = orderContext;
         }
 
         [Route("Account/Manage")]
@@ -28,6 +31,8 @@ namespace LiquorLand.Controllers
         {
             return View("Account/AccountManage");
         }
+
+        #region !User Profile Functions!
 
         [Authorize]
         public async Task<IActionResult> EditDetails(string? email, string? phone, string? fname, string? lname)
@@ -58,6 +63,7 @@ namespace LiquorLand.Controllers
             return View("Account/AccountManage");
         }
 
+        [Authorize]
         public async Task<IActionResult> EditAddress(string? country, string? city, string? address, string? postal)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -75,6 +81,7 @@ namespace LiquorLand.Controllers
             return View("Account/AccountManage");
         }
 
+        [Authorize]
         public async Task<IActionResult> ChangePassword(string currPass, string newPass)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -87,6 +94,38 @@ namespace LiquorLand.Controllers
 
             return Json(new { success = false });
         }
+
+        [Authorize]
+        public async Task<IActionResult> GetUserOrder(string orderId)
+        {
+            Order? orderDetails = await _orderContext.orders.FindAsync(orderId);
+
+            Dictionary<string, int>? order = null;
+
+            if (orderDetails != null)
+            {
+                order = JsonConvert.DeserializeObject<Dictionary<string, int>>(orderDetails.orderItems);
+            }
+
+            productViewModel? productViewModel = new productViewModel();
+            ViewBag.quantity = new List<int>();
+
+            if (order != null)
+            {
+                foreach (KeyValuePair<string, int> item in order)
+                {
+                    Product? p = await _productContext.Products.FindAsync(item.Key);
+                    if (p != null)
+                    {
+                        productViewModel.all_products.Add(p);
+                        ViewBag.quantity.Add(item.Value);
+                    }
+                }
+            }
+            return PartialView("_OrderProductsList", productViewModel);
+        }
+
+        #endregion
 
         #region !Admin Functions!
 
@@ -192,6 +231,22 @@ namespace LiquorLand.Controllers
             products.product_page = 1;
 
             return View("ProductManager", products);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> OrderStock(string serial, int stock)
+        {
+            Product? product = await _productContext.Products.FindAsync(serial);
+
+            if (product != null)
+            {
+                product.Stock += stock;
+                _productContext.Products.Update(product);
+                await _productContext.SaveChangesAsync();
+                return Json(new {success = true});
+            }
+
+            return Json(new { success = false });
         }
     }
 

@@ -29,14 +29,14 @@
 
                     <div class="quantity">
                         <button class="btn btn-link minus_button" id="minus_button" data-serial="@p.cartItem.Serial">-</button>
-                        <input data-serial="@p.cartItem.Serial" id="quantity-value" type="number" min="0" max="@p.cartItem.Stock" class="small-input quantity-value" value="@p.Quantity" />
-                        <button class="btn btn-link plus_button" id="plus_button" data-serial="@p.cartItem.Serial">+</button>
+                        <input data-serial="@p.cartItem.Serial" id="quantity-value" type="number" min="0" max="@p.cartItem.Stock" class="small-input quantity-value" value="@p.Quantity" data-quantity-url="@Url.Action("quantityChange", "ShoppingCart")"/>
+                        <button class="btn btn-link plus_button" id="plus_button" data-serial="@p.cartItem.Serial" data-plus-url="@Url.Action("plusItem", "ShoppingCart")">+</button>
                     </div>
 
                     <div class="item-price">$@p.cartItem.ProductPrice</div>
                     <div class="total-price">$@(p.cartItem.ProductPrice * p.Quantity)</div>
                     <div>
-                        <button type="button" class="btn-close remove_item" data-serial="@p.cartItem.Serial" />
+                        <button type="button" class="btn-close remove_item" data-serial="@p.cartItem.Serial" data-remove-url="@Url.Action("RemoveItem", "ShoppingCart")"/>
                     </div>
                 </div>
 
@@ -60,107 +60,9 @@
     </div>
 
 
-
-
-    <script>
-
-        $(document).ready(function () {
-            $('.remove_item').click(function () {
-                var serial = $(this).data('serial');
-
-                $.ajax({
-                    type: "GET",
-                    url: "@Url.Action("RemoveItem", "ShoppingCart")",
-                    data: { serial: serial },
-                    success: async function (response) {
-                        await itemCount();
-                        $('.item-count').html(items);
-                        $(".cart-container").html(response);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            });
-        });
-
-        $(document).ready(function () {
-            function updateQuantity(serial, action) {
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("plusItem", "ShoppingCart")',
-                    data: { serial: serial, action: action },
-                    success: async function (response) {
-                        if (response.success === false) {
-                            $("#alert-failure").fadeIn().delay(100).fadeOut();
-                            await itemCount();
-                            $('.item-count').html(items);
-                            $(".cart-container").load("@Url.Action("shoppingCarts", "ShoppingCart")", { partial: true });
-
-                        }
-                        else {
-                            await itemCount();
-                            $('.item-count').html(items);
-                            $(".cart-container").html(response);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            };
-
-            $('.plus_button').click(function () {
-                var serial = $(this).data('serial');
-                updateQuantity(serial, true);
-            });
-
-            $('.minus_button').click(function () {
-                var serial = $(this).data('serial');
-                updateQuantity(serial, false);
-            });
-
-            $(".quantity-value").keypress(function(e){
-                var char = String.fromCharCode(e.which);
-                var currentValue = $(this).val();
-                var reg = new RegExp("^[0-9]");
-
-                var selection = document.getSelection().toString();
-                if(!reg.test(String.fromCharCode(e.which))){
-                    e.preventDefault();
-                }
-            });
-
-            $(".quantity-value").change(function(){
-                var serial = $(this).data('serial')
-                var quantity = $(this).val()
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("quantityChange", "ShoppingCart")',
-                    data: { serial: serial, quantity: quantity },
-                    success: async function (response) {
-                        if (response.success === false) {
-                            $("#alert-failure").fadeIn().delay(100).fadeOut();
-                            await itemCount();
-                            $('.item-count').html(items);
-                            $(".cart-container").load("@Url.Action("shoppingCarts", "ShoppingCart")", { partial: true });
-
-                        }
-                        else {
-                            await itemCount();
-                            $('.item-count').html(items);
-                            $(".cart-container").html(response);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            });
-        });
-
-    </script>
-
 </div>
 
 
+<span id="cartUrl" data-cart-url="@Url.Action("shoppingCarts", "ShoppingCart")" />
+
+<script src="~/js/cartPage.js" />

@@ -1,11 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using LiquorLand.Areas.Identity.Data
-
-@inject UserManager<Users> UserManager
-
-@{
-    var user = await UserManager.GetUserAsync(User);
-}
+﻿@model LiquorLand.Areas.Identity.Data.Users
 
 <div class="profileDetails">
     <form method="POST" id="addressEdit" action=@Url.Action("EditAddress", "User")>
@@ -19,18 +12,18 @@
                 </div>
                 <div class="col col-sm-12 col-md-6 col-lg-6 userDetail">
                     <label class="inputlabel">City:</label>
-                    <input class="inputfield" disabled id="city" value="@user.City" name="city" type="text" autocomplete="city" />
+                    <input class="inputfield" disabled id="city" value="@Model.City" name="city" type="text" autocomplete="city" />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col col-sm-12 col-md-6 col-lg-6 userDetail">
                     <label class="inputlabel">Address:</label>
-                    <input class="inputfield" disabled id="address" value="@user.Address" name="address" type="text" autocomplete="street-address" />
+                    <input class="inputfield" disabled id="address" value="@Model.Address" name="address" type="text" autocomplete="street-address" />
                 </div>
                 <div class="col col-sm-12 col-md-6 col-lg-6 userDetail">
                     <label class="inputlabel">Postal Code:</label>
-                    <input class="inputfield" disabled id="postal" value="@user.PostalCode" name="postal" type="text" autocomplete="postal-code" />
+                    <input class="inputfield" disabled id="postal" value="@Model.PostalCode" name="postal" type="text" autocomplete="postal-code" />
                 </div>
             </div>
 
@@ -54,7 +47,7 @@
 <script>
     var editing = true;
     $(document).ready(function(){
-        $("#country").prop("value", "@user.Country");
+        $("#country").prop("value", "@Model.Country");
         $("#country").prop("disabled", true);
         $("#editbtnAdd").click(function(){
             editing = !editing
@@ -69,10 +62,10 @@
             else
             {
                 $("#edittextAdd").html("Edit");
-                $("#country").prop("value", "@user.Country");
-                $("#city").prop("value", "@user.City");
-                $("#address").prop("value", "@user.Address");
-                $("#postal").prop("value", "@user.PostalCode");
+                $("#country").prop("value", "@Model.Country");
+                $("#city").prop("value", "@Model.City");
+                $("#address").prop("value", "@Model.Address");
+                $("#postal").prop("value", "@Model.PostalCode");
             }
         });
     });
