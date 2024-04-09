@@ -241,7 +241,9 @@
                             else
                             {
                                 <div class="productButtons">
-                                    <button class="btn btn-primary rounded-3">Buy Now</button>
+                                    <a asp-area="" asp-action="GenerateToken" asp-controller="BrainTree">
+                                        <button class="btn btn-primary rounded-3 addToCartButton" data-serial="@p.Serial">Buy Now</button>
+                                    </a>
                                 <button class="btn btn-warning rounded-3 addToCartButton" data-serial="@p.Serial">Add to cart</button>
                                 </div>
                             }

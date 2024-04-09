@@ -267,3 +267,39 @@ h1, h2, h3, h4, h5, h6 {
     .loginOptions a {
         color: white;
     }
+}
+=========
+#alert-failure,
+#alert-success,
+#alertLimt {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 8px;
+    height: 10%;
+    display: none;
+}
+
+.shopping-cart {
+    position: relative;
+}
+
+.item-count {
+    position: absolute;
+    top: -20%;
+    right: -5%;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 60%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 80%;
+    font-weight: bold;
+}
+>>>>>>>>> Temporary merge branch 2

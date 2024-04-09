@@ -24,17 +24,22 @@
     margin-top: 10px;
 }
 .shop_titel {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.icon_, .ordernum {
     display: flex;
     justify-content: center;
     align-items: center;
-
+    height: 100%;
+    margin-top: 8px;
 }
 
 .cart-item img {
     max-width: 100px;
     max-height: 100px;
     align-items: center;
-    
 }
 
 .item-details {
@@ -155,3 +160,4 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
