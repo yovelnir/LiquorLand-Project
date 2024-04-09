@@ -1,0 +1,33 @@
+﻿<link rel="stylesheet" href="~/css/accountmanager.css" asp-append-version="true" />
+
+<div class="profileContainer">
+    <div class="profile">
+        <div asp-validation-summary="ModelOnly" class="text-danger mt-5"></div>
+        <div class="ProfileTabs">
+            <div class="tabs">
+                <ul class="nav nav-tabs nav-tabs-vertical" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="vertical-tab-0" data-bs-toggle="tab" href="#user-details" role="tab" aria-controls="vertical-tabpanel-0" aria-selected="true">User Details</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="vertical-tab-1" data-bs-toggle="tab" href="#shipping-address" role="tab" aria-controls="vertical-tabpanel-1" aria-selected="false">Shipping Address</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="vertical-tab-2" data-bs-toggle="tab" href="#change-password" role="tab" aria-controls="vertical-tabpanel-2" aria-selected="false">Change Password</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="vertical-tab-3" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="vertical-tabpanel-3" aria-selected="false">Orders</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tabContent">
+                <div class="tab-content" id="tab-content" aria-orientation="vertical">
+                    <div class="tab-pane active" id="user-details" role="tabpanel" aria-labelledby="vertical-tab-0"> <partial name="_ProfilePartial.cshtml" /> </div>
+                    <div class="tab-pane" id="shipping-address" role="tabpanel" aria-labelledby="vertical-tab-1"> <partial name="_ShippingAddress.cshtml" /> </div>
+                    <div class="tab-pane" id="change-password" role="tabpanel" aria-labelledby="vertical-tab-2"> <partial name="_ChangePassword.cshtml" /> </div>
+                    <div class="tab-pane" id="orders" role="tabpanel" aria-labelledby="vertical-tab-3">INSERT PAST ORDER HERE LATER</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

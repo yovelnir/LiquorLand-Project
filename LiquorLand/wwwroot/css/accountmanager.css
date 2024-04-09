@@ -1,0 +1,113 @@
+﻿.profileContainer{
+    width: 100%;
+    height: 100%;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.ProfileTabs{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 15% 70%;
+    padding-left: 10vw;
+    padding-top: 5vh;
+}
+
+.tabs {
+    grid-column: 1;
+}
+
+.tabContent {
+    grid-column: 2;
+    height: 100%;
+    width: 100%;
+}
+
+.Details {
+    margin-left: 10px;
+    color: black;
+    font-size: 1.1em;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-color: #EEEEEE;
+}
+
+.userDetail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 2vh;
+}
+
+#username{
+    align-items: center;
+    margin-bottom: 2vh;
+}
+
+#username input {
+    text-align: center;
+}
+
+.inputlabel {
+    grid-row: 1;
+}
+
+inputfield {
+    grid-row: 2;
+}
+
+.userDetail input[disabled], .userDetail select[disabled] {
+    background: white;
+    border: none;
+    color: black;
+    user-select: none;
+    pointer-events: none;
+    transition: all ease-in-out 200ms;
+}
+
+.userDetail input{
+    width: 100%;
+    min-width: 200px;
+}
+
+.editsubmit{
+    float: right;
+}
+
+.editbtn{
+    float:left;
+}
+
+.nav-tabs-vertical .nav-link {
+    width: 100%;
+    font-size: 1em;
+    color: white;
+}
+
+.Details .btn {
+    margin-top: 10px;
+}
+
+.showPassword {
+    cursor: pointer;
+    transition: all ease-in-out 200ms;
+}
+
+.showPassword:hover {
+    opacity: 50%;
+}
+
+.alert{
+    display: none;
+    margin-left: 10px;
+    width: 100%;
+    border-radius: 0;
+}

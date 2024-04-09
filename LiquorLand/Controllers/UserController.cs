@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using LiquorLand.Models;
 using LiquorLand.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using LiquorLand.Areas.Identity.Data;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Drawing;
 using System.IO;
@@ -11,16 +13,82 @@ namespace LiquorLand.Controllers
     public class UserController : Controller
     {
         private readonly ProductContext _productContext;
+        private readonly UserManager<Users> _userManager;
 
-        public UserController(ProductContext productContext)
+        public UserController(ProductContext productContext, UserManager<Users> userManager)
         {
             _productContext = productContext;
+            _userManager = userManager;
         }
 
+        [Route("Account/Manage")]
+        [Route("User")]
+        [Authorize]
         public IActionResult Index()
         {
-            return Redirect("/");
+            return View("Account/AccountManage");
         }
+
+        [Authorize]
+        public async Task<IActionResult> EditDetails(string? email, string? phone, string? fname, string? lname)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            bool valid = true;
+
+            if (user != null)
+            {
+                if(email != user.Email && await _userManager.FindByEmailAsync(email) != null)
+                {
+                    ModelState.AddModelError(String.Empty, $"The email: {email} is already used by another user, please try again.");
+                    valid = false;
+                }
+                else
+                    user.Email = email;
+
+                if (valid)
+                {
+                    user.PhoneNumber = phone;
+                    user.FirstName = fname;
+                    user.LastName = lname;
+
+                    await _userManager.UpdateAsync(user);
+                }
+            }
+
+            return View("Account/AccountManage");
+        }
+
+        public async Task<IActionResult> EditAddress(string? country, string? city, string? address, string? postal)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                user.Country = country;
+                user.City = city;
+                user.Address = address;
+                user.PostalCode = postal;
+
+                await _userManager.UpdateAsync(user);
+            }
+
+            return View("Account/AccountManage");
+        }
+
+        public async Task<IActionResult> ChangePassword(string currPass, string newPass)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _userManager.ChangePasswordAsync(user, currPass, newPass);
+
+            if (result.Succeeded)
+            {
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false });
+        }
+
+        #region !Admin Functions!
 
         [Authorize(Roles = "Admin")]
         [Route("Admin/AddProduct")]
@@ -126,4 +194,6 @@ namespace LiquorLand.Controllers
             return View("ProductManager", products);
         }
     }
+
+    #endregion
 }

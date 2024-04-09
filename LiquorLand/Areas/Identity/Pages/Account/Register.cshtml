@@ -47,7 +47,9 @@
             <div class="col-6">
                 <h2>Add additional details</h2>
                 <div class="form-floating mb-1">
-                    <input asp-for="Input.Country" class="form-control" autocomplete="country-name" aria-required="true" placeholder="Country" />
+                    <select asp-for="Input.Country" class="form-control" autocomplete="country-name" aria-required="true" placeholder="Country">
+                        <partial name="/Views/Shared/_CountryList.cshtml"/>
+                    </select>
                     <label asp-for="Input.Country" class="text-black">Country</label>
                     <span asp-validation-for="Input.Country" class="text-danger"></span>
                 </div>
