@@ -91,7 +91,7 @@
                                 {
                                     <div class="productButtons">
                                         <a asp-area="" asp-action="GenerateToken" asp-controller="BrainTree">
-                                            <button class="btn btn-primary rounded-3 addToCartButton" data-serial="@p.Serial">Buy Now</button>
+                                            <button class="btn btn-primary rounded-3 addToCartButton" data-serial="@p.Serial" data-add-url="@Url.Action("addToCart", "ShoppingCart")">Buy Now</button>
                                         </a>
                                     <button class="btn btn-warning rounded-3 addToCartButton" data-serial="@p.Serial" data-add-url="@Url.Action("addToCart", "ShoppingCart")">Add to cart</button>
                                     </div>

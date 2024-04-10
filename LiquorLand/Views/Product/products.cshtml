@@ -69,7 +69,7 @@
                             <div class="shopButtons">
                                 <button class="btn btn-warning rounded-5 shadow-md addToCartButton"  data-serial="@Model.Serial" data-add-url="@Url.Action("addToCart", "ShoppingCart")">Add To Cart</button>
                                 <a asp-area="" asp-action="GenerateToken" asp-controller="BrainTree">
-                                    <button class="btn btn-info rounded-5 shadow-md addToCartButton" data-serial="@Model.Serial">Buy Now</button>
+                                    <button class="btn btn-info rounded-5 shadow-md addToCartButton" data-serial="@Model.Serial" data-add-url="@Url.Action("addToCart", "ShoppingCart")">Buy Now</button>
                                 </a>
                             </div>
                         }
