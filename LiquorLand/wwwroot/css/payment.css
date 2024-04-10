@@ -1,0 +1,109 @@
+﻿#payment-form {
+    width: 700px;
+    margin: 0 auto;
+}
+
+.name-container {
+    display: flex;
+}
+
+.shippingAddress {
+    text-align: center;
+}
+
+.paymentBackground {
+    background-color: #1e2128;
+    color: #fff;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.input-wrapper {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.labelName {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.titel {
+    display: inline-block;
+    position: relative;
+    padding-bottom: 10px;
+    margin-top: 20px;
+}
+
+.titel::after {
+    content: "";
+    position: absolute;
+    bottom: 55%;
+    left: 55%; 
+    transform: translateX(50%);
+    width: 100%;
+    border-bottom: 1px solid gray;
+    margin-top: 10px;
+}
+
+.titel::before {
+    content: "";
+    position: absolute;
+    top: 45%; 
+    right: 55%; 
+    transform: translateX(-50%);
+    width: 100%;
+    border-bottom: 1px solid gray;
+}
+.braintree-heading {
+    color: white !important;
+}
+
+.inputText {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+
+[data-braintree-id="choose-a-way-to-pay"] {
+    display: none;
+    height: 0;
+}
+.choose{
+    font-size: 16px;
+    transform: translateY(20px);
+}
+.checkout-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #31363F;
+    border: none;
+    font-family: Arial;
+    font-weight: 500;
+    border-radius: 5px;
+    color: white;
+    transition: background-color 0.3s;
+    width: 13vw;
+    max-width: 20vw;
+    border-radius: 5px;
+    border: 2px solid #555;
+}
+.Pay {
+    text-align: center;
+    margin-right: 10px;
+}
+
+.cart-summary {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.checkout-btn:hover {
+    background-color: #d9a805;
+}

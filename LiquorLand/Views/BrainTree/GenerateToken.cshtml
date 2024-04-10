@@ -1,28 +1,161 @@
-﻿@if (TempData["Success"] != null)
+﻿@using Microsoft.AspNetCore.Identity
+@using LiquorLand.Areas.Identity.Data
+<link href="~/css/payment.css" rel="stylesheet" />
+@inject UserManager<Users> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+
+@if (TempData["Success"] != null)
 {
     <div class="alert alert-success alert-dismissible">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         @TempData["Success"]
     </div>
 }
+<div class="paymentBackground">
+    <form method="post" asp-action="GenerateToken" id="payment-form">
+        <div class="wrapper">
+            <div class="checkout container">
+                <header>
+                    <div class="shippingAddress">
+                        <h2 class="titel">Shipping Address</h2>
+                    </div>
 
-<form method="post" asp-action="GenerateToken" id="payment-form">
-    <div class="wrapper">
-        <div class="checkout container">
-            <header>
-                <h1 class="text-info">Test a random transaction</h1>
-                <p class="text-success">make a test payment - using paypal or card</p>
-            </header>
-            <section>
-                <div class="bt-drop-in-wrapper">
-                    <div id="bt-dropin"></div>
+                    <form method="post">
+                        @if (user != null)
+                        {
+                            <div class="name-container">
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="first_name">First Name:</label>
+                                    <input class="inputText" type="text" id="first_name" name="first_name" value="@user.FirstName" required>
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="last_name">Last Name:</label>
+                                    <input class="inputText" type="text" id="last_name" name="last_name" value="@user.LastName" required>
+                                </div>
+                            </div>
+                            <div class="name-container">
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="phone">Phone Number:</label>
+                                    <input class="inputText" type="text" id="phone" name="phone" value="@user.PhoneNumber" required>
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="postal_code">Postal Code:</label>
+                                    <input class="inputText" type="text" id="postal_code" name="postal_code" required>
+                                </div>
+                            </div>
+                            <label class="labelName" for="Email">Email:</label>
+                            <input class="inputText" type="text" id="Email" name="Email" value="@user.Email" required>
+                            <label class="labelName" for="country">Country:</label>
+                            <select class="inputText" type="text" id="country" name="country" oninvalid="@user.Country" required>
+                                <partial name="~/Views/Shared/_CountryList.cshtml" />
+                            </select>
+                            <label class="labelName" for="address">Address:</label>
+                            <input class="inputText" type="text" id="address" name="address" value="@user.Address" requierd>
+                        }
+                        else
+                        {
+                            <div class="name-container">
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="first_name">First Name:</label>
+                                    <input class="inputText" type="text" id="first_name" name="first_name" required>
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="last_name">Last Name:</label>
+                                    <input class="inputText" type="text" id="last_name" name="last_name" required>
+                                </div>
+                            </div>
+                            <div class="name-container">
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="phone">Phone Number:</label>
+                                    <input class="inputText" type="text" id="phone" name="phone" required>
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="postal_code">Postal Code:</label>
+                                    <input class="inputText" type="text" id="postal_code" name="postal_code" required>
+                                </div>
+                            </div>
+                            <label class="labelName" for="Email">Email:</label>
+                            <input class="inputText" type="text" id="Email" name="Email" required>
+                            <label class="labelName" for="country">Country:</label>
+                            <select class="inputText" type="text" id="country" name="country" required>
+                                <partial name="~/Views/Shared/_CountryList.cshtml" />
+                            </select>
+                            <label class="labelName" for="address">Address:</label>
+                            <input class="inputText" type="text" id="address" name="address" required>
+                        }
+                    </form>
+
+                    <form method="post">
+
+                        <input type="checkbox" id="bill" name="bill" value="bill" onchange="toggleBillingAddress()" />
+                        <label for="bill">If you have a different billing address, please select it.</label>
+                        
+                        <div class="shippingAddress">
+                            <h2 class="titel">Billing Address</h2>
+                        </div>
+                        <div id="billingAddressFields" style="display: none;">
+                            <div class="name-container">
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="first_name">First Name:</label>
+                                    <input class="inputText" type="text" id="first_name" name="first_nameBil">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="last_name">Last Name:</label>
+                                    <input class="inputText" type="text" id="last_name" name="last_nameBil">
+                                </div>
+                            </div>
+                            <div class="name-container">
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="phone">Phone Number:</label>
+                                    <input class="inputText" type="text" id="phone" name="phoneBil">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="labelName" for="postal_code">Postal Code:</label>
+                                    <input class="inputText" type="text" id="postal_code" name="postal_codeBil">
+                                </div>
+                            </div>
+                            <label class="labelName" for="Email">Email:</label>
+                            <input class="inputText" type="text" id="Email" name="EmailBil">
+
+                            <label class="labelName" for="country">Country:</label>
+                            <select class="inputText" type="text" id="country" name="countryBil">
+                                <partial name="~/Views/Shared/_CountryList.cshtml" />
+                            </select>
+
+                            <label class="labelName" for="address">Address:</label>
+                            <input class="inputText" type="text" id="address" name="addressBil">
+                        </div>
+
+                        <script>
+                            function toggleBillingAddress() {
+                                var checkbox = document.getElementById("bill");
+                                var billingAddressFields = document.getElementById("billingAddressFields");
+                                billingAddressFields.style.display = checkbox.checked ? "block" : "none";
+                            }
+                        </script>
+                    </form> 
+
+                </header>
+                <section>
+                    <div class="bt-drop-in-wrapper">
+                        <label>Choose Payment Method</label>
+                        <div id="bt-dropin"></div>
+                    </div>
+                </section>
+                <input id="nonce" name="payment_method_nonce" type="hidden" />
+
+                <div class="cart-summary">
+                        <div class="Pay">
+                            <button class="checkout-btn" id="submit-button">Pay</button> 
+                        </div>         
                 </div>
-            </section>
-            <input id="nonce" name="payment_method_nonce" type="hidden" />
-            <button class="button" id="submit-button"> <span>Test Transaction</span></button>
+                
+            </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 
 @section Scripts {
     <script src="https://js.braintreegateway.com/web/dropin/1.42.0/js/dropin.min.js"></script>
@@ -44,9 +177,12 @@
                         return;
                     }
                     document.querySelector('#nonce').value = payload.nonce;
+
                     form.submit();
                 });
             });
         });
+
+
     </script>
 }
