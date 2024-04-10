@@ -1,6 +1,9 @@
 ﻿@model List<LiquorLand.Models.cartsItem>
 <link href="~/css/shoppingCart.css" rel="stylesheet" />
 
+<div> 
+    <h1>Thank you for your purchase here`s the details:</h1>
+
 <div>
     <h1 class="shop_titel m-5">Thank you for your ordering!</h1>
     <div class="icon_">
@@ -40,6 +43,9 @@
                         <button type="button" class="checkout-btn">Continue Shopping</button>
                     </a>
                 </div>
+                <a asp-area="" asp-action="Index" asp-controller="Home">
+                    <button type="button" class="checkout-btn">Back to Home page</button>
+                </a>
             </div>
         </div>
     </div>

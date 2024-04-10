@@ -1,5 +1,4 @@
-﻿<!--model LiquorLand.Models.Product-->
-@model LiquorLand.ViewModels.productViewModel
+﻿@model LiquorLand.ViewModels.productViewModel
 
 
     <div id="productGallery" class="row g-0 mb-5 mb">
@@ -45,7 +44,9 @@
                             <p class="card-text"><span class="badge bg-primary">Price: </span>$@p.ProductPrice</p>
                             @if (p.Stock == 0)
                             {
-                                <button class="btn btn-success rounded-3">Notify when back in stock</button>
+                                <a asp-area="" asp-action="notifyBtnPreesed" asp-controller="Home" asp-route-Serial=@p.Serial>
+                                    <button class="btn btn-success rounded-3">Notify when back in stock</button>
+                                </a>
                             }
                             else
                             {
