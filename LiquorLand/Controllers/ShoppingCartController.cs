@@ -5,6 +5,14 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
+//see what we can remove
+using Braintree;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+
+
 
 namespace LiquorLand.Controllers
 {
@@ -12,6 +20,7 @@ namespace LiquorLand.Controllers
     {
         private ShoppingCart shoppingCart;
         public readonly ProductContext _productContext;
+       
 
         public ShoppingCartController(ProductContext productContext)
         {
@@ -37,7 +46,7 @@ namespace LiquorLand.Controllers
 
                 if (c != null)
                 {
-                    if (p.Stock > c.Quantity)
+                    if (p.Stock >= c.Quantity + quantity)
                     {
                         shoppingCart.AddToCart(c.cartItem, quantity); 
                         HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
@@ -130,6 +139,44 @@ namespace LiquorLand.Controllers
             }
             return shoppingCarts(true);
         }
+
+        public IActionResult quantityChange(string serial, int quantity)
+        {
+            var shoppingCartString = HttpContext.Session.GetString("cart");
+            ShoppingCart? shoppingCart = null;
+            Product? p = _productContext.Products.Find(serial);
+            if (shoppingCartString != null)
+                shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartString);
+
+            if (shoppingCart != null)
+            {
+                cartsItem? c = shoppingCart.CartItems.Find(item => item.cartItem.Serial == serial);
+
+                if(quantity == 0)
+                {
+                    return RemoveItem(serial);
+                }
+
+                if (c != null && p != null)
+                {
+                    if(quantity > c.Quantity)
+                    {
+                        while(c.Quantity < p.Stock && c.Quantity < quantity)
+                        {
+                            c.Quantity++;
+                        }
+                    }
+                    else
+                    {
+                        c.Quantity = quantity;
+                    }
+                    HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
+                }
+            }
+            return shoppingCarts(true);
+        }
+
+        [Route("ShoppingCart")]
         public IActionResult shoppingCarts(bool partial = false)
         {
             var shoppingCartString = HttpContext.Session.GetString("cart");
@@ -169,6 +216,39 @@ namespace LiquorLand.Controllers
             }
             return shoppingCarts(true);
         }
+
+        public async Task<IActionResult> removeCart(Order order)
+        {
+            Product? product = null;
+            var shoppingCartString = HttpContext.Session.GetString("cart");
+            ShoppingCart? shoppingCart = null;
+
+
+            if (shoppingCartString != null)
+            {
+                shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartString);
+            }
+            if(shoppingCart != null)
+            {
+                foreach (cartsItem item in shoppingCart.CartItems)
+                {
+                    product = _productContext.Products.Find(item.cartItem.Serial);
+                    if (product != null)
+                    {
+                        product.SaleAmount += item.Quantity;
+                        product.Stock -= item.Quantity;
+                        _productContext.Products.Update(product);
+                        await _productContext.SaveChangesAsync();
+                    }    
+                }
+                
+                shoppingCart.CartItems.Clear();
+                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
+            }
+            //return View("shoppingCart", shoppingCart);
+            return RedirectToAction("successPayment", "BrainTree", order);
+        }
+
 
     }
 }

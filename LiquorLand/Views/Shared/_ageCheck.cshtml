@@ -1,0 +1,115 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<style>
+#ageVerificationModal {
+    transform: translate(0, 30%);
+    pointer-events: none;
+    user-select: none;
+}
+
+#ageVerification {
+    background-color: #19233a;
+    border: solid 2px black;
+    border-radius: 2em;
+    overflow: hidden;
+    box-shadow: black 0px 5px 15px;
+}
+
+#ageVerificationTitle{
+    width: 100%;
+    text-align: center;
+}
+
+#ageVerificationBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    gap: 1vh;
+    pointer-events: none;
+}
+
+#ageVerificationFooter{
+    margin-top: 20px;
+    display: flex;
+    align-content:center;
+    justify-content: center;
+    color: black;
+    background-color: whitesmoke;
+    height: 5vh;
+    font-size: 0.89em;
+}
+
+.ageBtn {
+    pointer-events: all;
+    width: 15rem;
+    box-shadow: black 0px 5px 15px;
+}
+</style>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="ageVerificationModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" id="ageVerification">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ageVerificationTitle">🔞Age Verification🔞</h5>
+      </div>
+      <div class="modal-body" id="ageVerificationBody">
+        <div>Are you over 18 years old?</div>
+        <button type="button" class="btn btn-primary ageBtn" id="confirmAge">Yes</button>
+        <button type="button" class="btn btn-secondary ageBtn" id="denyAge">No</button>
+      </div>
+      <div class="modal-footer" id="ageVerificationFooter">
+          Warning: excessive consumption of alcohol is life-threatening and harmful to health!
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Check if the age has already been verified
+    if (!getCookie('ageVerified')) {
+        // Show the modal if age has not been verified
+        $('#ageVerificationModal').modal('show');
+    }
+
+    $('#confirmAge').click(function() {
+        // Set the cookie to remember the user's age verification
+        setCookie('ageVerified', 'true', 24); // Expires in 24 hours
+        $('#ageVerificationModal').modal('hide');
+    });
+
+    $('#denyAge').click(function() {
+        // Redirect to Google if the user is not over 18
+        window.location.href = 'https://www.google.com';
+    });
+});
+
+// Function to set a cookie
+function setCookie(name, value, hours) {
+    var expires = "";
+    if (hours) {
+        var date = new Date();
+        date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+// Function to get a cookie
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+</script>

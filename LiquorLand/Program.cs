@@ -4,6 +4,9 @@ using LiquorLand.Areas.Identity.Data;
 using LiquorLand.Models;
 using LiquorLand.Data;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("UserDbContextConnection") ?? throw new InvalidOperationException("Connection string 'UserDbContextConnection' not found.");
 
@@ -11,6 +14,9 @@ builder.Services.AddDbContext<UserDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDbContext<ProductContext>(options =>
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddDbContext<OrderContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<Users>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -27,11 +33,10 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/AccessDenied";
 });
 
-
-//for me
+builder.Services.Configure<BraintreeConfiguration>(builder.Configuration.GetSection("BrainTree"));
 
 builder.Services.AddDistributedMemoryCache();
-
+builder.Services.AddSingleton<IBraintreeGate, BraintreeGate>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromSeconds(3600); // Session timeout of 1 hour
@@ -102,6 +107,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+
+
 app.Use(async (context, next) =>
 {
     // Store Model
@@ -114,6 +121,8 @@ app.Use(async (context, next) =>
     await next();   
 });
 
+
 app.UseStaticFiles();
 
 app.Run();
+

@@ -1,5 +1,4 @@
 ﻿@model LiquorLand.ViewModels.productViewModel
-<link href="~/css/shoppingcart.css" rel="stylesheet" />
 
 @{
     ViewData["Title"] = "Home Page";
@@ -53,8 +52,8 @@
             <div class="TopProducts">
                 @foreach (Product p in Model.hot_products)
                 {
-                    <div class="col-md-3 overflow-visible m-2 productCard" style="width: 282.2px; margin-left: 10px;">
-                        <div class="card border-dark text-center rounded-5 align-items-center" style="background-color: #31363F; color: #EEEEEE;">
+                    <div class="col-md-3 overflow-visible m-2" style="width: 282.2px; margin-left: 10px;">
+                        <div class="card border-dark text-center rounded-5 align-items-center productCard" style="background-color: #31363F; color: #EEEEEE;">
 
                             @if (User.IsInRole("Admin"))
                             {
@@ -90,7 +89,12 @@
                                 }
                                 else
                                 {
-                                    <button class="btn btn-warning rounded-3 addToCartButton" data-serial="@p.Serial">Add to cart</button>
+                                    <div class="productButtons">
+                                        <a asp-area="" asp-action="GenerateToken" asp-controller="BrainTree">
+                                            <button class="btn btn-primary rounded-3 addToCartButton" data-serial="@p.Serial">Buy Now</button>
+                                        </a>
+                                    <button class="btn btn-warning rounded-3 addToCartButton" data-serial="@p.Serial" data-add-url="@Url.Action("addToCart", "ShoppingCart")">Add to cart</button>
+                                    </div>
                                 }
                             </div>
                         </div>

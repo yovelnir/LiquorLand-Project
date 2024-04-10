@@ -16,9 +16,6 @@ namespace LiquorLand.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ProductContext _productContext;
-        private ShoppingCart cart = new ShoppingCart();
-
-        
 
         public HomeController(ILogger<HomeController> logger, ProductContext productContext)
         {
@@ -59,16 +56,6 @@ namespace LiquorLand.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-
-
-        public IActionResult ViewCart()
-        {
-            //var cart = shoppingCarts.Get
-            return View();
-        }
-
-
 
     }
 }

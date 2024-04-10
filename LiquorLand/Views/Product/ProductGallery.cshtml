@@ -7,155 +7,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="~/css/productGallery.css" asp-append-version="true" />
 
-<script>
-    var page = 1;
-    var searchParams = new URLSearchParams(window.location.search);
-    var cat = searchParams.get('category');
-    var sub = searchParams.get('sub');
-    var term = searchParams.get('word');
-    var sortType = null;
-    var filterData = null;
-
-    if(cat != null){
-        $(document).ready(function() {$('#category').prop('value', cat);});
-        $(document).ready(function() {$('#category').prop('disabled', true);});
-    }
-    if(sub != null){
-        $(document).ready(function() {$('#sub').prop('value', sub)});
-        $(document).ready(function() {$('#sub').prop('disabled', true)});
-    }
-
-    $(document).ready(function(){
-        function getFilterData(){
-            return {
-                serial: $('#serial').val(),
-                country: $('#country').val(),
-                maker: $('#maker').val(),
-                name: $('#name').val(),
-                category: $('#category').val(),
-                sub: $('#sub').val(),
-                price: $('#price').val(),
-                volume: $('#volume').val(),
-                alpercent: $('#alch').val(),
-                searchTerm: term,
-                sort: sortType,
-                productAmount: 10,
-                page: page
-            };
-        };
-
-        function loadMore(){
-            page++
-
-            filterData = getFilterData();
-
-            $.ajax({
-                url: '@Url.Action("loadMoreProducts", "Product")',
-                type: 'Get',
-                data: {
-                    sort: sortType,
-                    filterData: filterData,
-                },
-                success: function(result){
-                    $('#productGallery').html(result);
-                    $(".loadProducts").click(loadMore);
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    alert('Error: ' + error);
-                }
-            })
-        };
-
-        function sort(){
-            sortType = $(this).data("sort")
-            page = 1;
-            filterData = getFilterData();
-
-            $.ajax({
-                url: '@Url.Action("SortGallery", "Product")',
-                type: 'Get',
-                data: {
-                    sort: sortType,
-                    filterData: filterData
-                },
-                success: function(result) {
-                    $('#productGallery').html(result);
-                    $(".loadProducts").click(loadMore);
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    alert('Error: ' + error);
-                }
-            });
-        }
-
-        function filter(){
-            page = 1;
-
-            filterData = getFilterData()
-
-            $.ajax({
-                url: '@Url.Action("FilterProductSearch", "Product")',
-                type: 'GET',
-                data: filterData,
-                contentType: 'application/json; charset=utf-8',
-                success: function (result) {
-                    // Replace the product list with filtered data
-                    $('#productGallery').html(result);
-                    $(".loadProducts").click(loadMore);
-                },
-                error: function (xhr, status, error) {
-                    // Handle error
-                    alert('Error: ' + error);
-                }
-            });
-        }
-
-        function clear(){
-            const inputs = document.querySelectorAll("input")
-            for(const input of inputs){
-                input.value = null;
-                input.disabled = false;
-            }
-
-            sortType = null;
-            page = 1;
-
-            $.ajax({
-                url: '@Url.Action("FilterProductSearch", "Product")',
-                type: 'GET',
-                data: {searchTerm: term, productAmount: 10, page: page},
-                contentType: 'application/json; charset=utf-8',
-                success: function(result) {
-                    // Replace the product list with filtered data
-                    $('#productGallery').html(result);
-                    $(".loadProducts").click(loadMore);
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    alert('Error: ' + error);
-                }
-            });
-        }
-
-        $(".loadProducts").click(loadMore)
-        $(".SortType").click(sort)
-        $("#filterAll").click(filter)
-        $("#clearAll").click(clear)
-
-        $(".sortButton").click(function() {
-            // Toggle width between 0 and 50vw
-            var newWidth = $(".sortBox").width() > 0 ? 0 : '81vw';
-            page = 1;
-
-            $(".sortBox").animate({
-                width: newWidth
-            }, 150);
-        });
-    });
-</script>
-
 <div class="galleryContainer">
 
     <div class="sorter">
@@ -165,7 +16,7 @@
             </svg>
         </button>
 
-        <div class="sortBox">
+        <div class="sortBox" data-sort-url="@Url.Action("SortGallery", "Product")">
             <btn class="btn SortType" data-sort="pdn">Price ↑</btn>
             <btn class="btn SortType" data-sort="pup">Price ↓</btn>
             <btn class="btn SortType" data-sort="ndn">Name ↑</btn>
@@ -178,7 +29,7 @@
     </div>
 
     <div class="searchFiltersContainer">
-        <div class="searchFilters">
+        <div class="searchFilters" data-filter-url="@Url.Action("FilterProductSearch", "Product")">
             <input type="text" id="serial" name="serial" placeholder="Serial" />
             <input type="text" id="category" name="category" placeholder="Category" />
             <input type="text" id="sub" name="sub" placeholder="Sub Category" />
@@ -204,7 +55,7 @@
             @foreach (Product p in Model.all_products)
             {
                 <div class="col-md-3 overflow-visible m-2" style="width: 282.2px; margin-left: 10px;">
-                    <div class="card border-dark text-center rounded-5 align-items-center" style="background-color: #31363F; color: #EEEEEE;">
+                    <div class="card border-dark text-center rounded-5 align-items-center productCard" style="background-color: #31363F; color: #EEEEEE;">
 
                         @if (User.IsInRole("Admin"))
                         {
@@ -240,7 +91,12 @@
                             }
                             else
                             {
-                                <button class="btn btn-warning rounded-3">Add to cart</button>
+                                <div class="productButtons">
+                                    <a asp-area="" asp-action="GenerateToken" asp-controller="BrainTree">
+                                        <button class="btn btn-primary rounded-3 addToCartButton" data-serial="@p.Serial" data-add-url="@Url.Action("addToCart", "ShoppingCart")">Buy Now</button>
+                                    </a>
+                                <button class="btn btn-warning rounded-3 addToCartButton" data-serial="@p.Serial" data-add-url="@Url.Action("addToCart", "ShoppingCart")">Add to cart</button>
+                                </div>
                             }
                         </div>
                     </div>
@@ -250,8 +106,10 @@
         @if (Model.total_products > Model.product_page * 10)
         {
             <div class="LoadMore">
-                <button class="btn btn-primary loadProducts">Load More Products</button>
+                <button class="btn btn-primary loadProducts" data-load-url="@Url.Action("loadMoreProducts", "Product")">Load More Products</button>
             </div>
         }
     </div>
 </div>
+
+<script src="~/js/gallery.js" />
