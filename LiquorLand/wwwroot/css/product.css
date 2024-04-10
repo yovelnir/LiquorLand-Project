@@ -60,8 +60,7 @@
 }
 
 .img-fluid{
-    width: 300px;
-    min-width: 10vw;
+    max-width: 10vw;
 }
 
 .quantityTab{

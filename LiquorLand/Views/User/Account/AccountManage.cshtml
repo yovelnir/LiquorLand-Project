@@ -7,7 +7,7 @@
 
 @{
     var user = await UserManager.GetUserAsync(User);
-    List<Order> orders = OrderContext.orders.Where(order => order.userId == user.Id).ToList<Order>();
+    List<Order> orders = OrderContext.orders.Where(order => order.userId == user.Id).OrderByDescending(order => order.orderDate).ToList<Order>();
 }
 <link rel="stylesheet" href="~/css/accountmanager.css" asp-append-version="true" />
 

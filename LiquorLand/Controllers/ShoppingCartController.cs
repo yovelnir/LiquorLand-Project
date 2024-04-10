@@ -196,6 +196,10 @@ namespace LiquorLand.Controllers
             {
                 ViewBag.OrderFail = OrderFail;
             }
+            else
+            {
+                ViewBag.OrderFail = null;
+            }
 
             var shoppingCartString = HttpContext.Session.GetString("cart");
             ShoppingCart? shoppingCart = null;

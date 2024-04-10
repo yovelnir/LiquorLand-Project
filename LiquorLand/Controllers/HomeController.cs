@@ -42,18 +42,6 @@ namespace LiquorLand.Controllers
             productViewModel products = new productViewModel();
             products.all_products = _productContext.Products.ToList<Product>();
 
-            /*
-            //for notification
-            prodList = new List<string>(); 
-            foreach(notification noti in _notifyContext.notify)
-            {
-                if (noti.BackInStock)
-                {
-                    prodList.Add(noti.productId.ToString() + " ");
-                }
-            }*/
-            //ViewData["prList"] = prodList;
-
             products.hot_products = products.getHotProducts(_productContext);
 
             return View(products);
@@ -125,7 +113,7 @@ namespace LiquorLand.Controllers
             else
                 HttpContext.Response.Cookies.Append("notification", countNoti.ToString());
 
-            return View("Policy");
+            return RedirectToAction("Privacy");
         }
 
         public async Task<IActionResult> notifyBtnPreesed(string Serial)

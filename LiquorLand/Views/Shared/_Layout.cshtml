@@ -58,7 +58,7 @@
                         
                         <li class="nav-item justify-self-center">
                             <div class="d-flex"> 
-                                @if ((User.IsInRole("User") || User.IsInRole("Admin")) && Context.Request.Cookies.ContainsKey("notification"))
+                                @if ((User.IsInRole("User") || User.IsInRole("Admin")) && (Context.Request.Cookies.ContainsKey("notification") && Context.Request.Cookies["ageVerified"] != null))
                                 {
                                     <span class="trigger"></span>
                                 }
@@ -254,7 +254,17 @@
                     $('#submitSearch').prop("disabled", true)
                 }
             });
+
+            if(getCookie("notification") != null && getCookie("notification") == "0")
+            {
+                $(".trigger").hide();
+            }
+            else
+            {
+                $(".trigger").hide();
+            }
         });
+
     </script>
 </body>
 </html>

@@ -59,11 +59,6 @@ namespace LiquorLand.Controllers
             decimal amount = 0;
             ShoppingCart? shoppingCart = httpCart();
 
-
-
-                     if (shoppingCartString != null)
-                     {
-                         shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartString); }*/
             if (shoppingCart != null)
             {
                 amount = shoppingCart.GetTotal();
@@ -82,15 +77,15 @@ namespace LiquorLand.Controllers
                             }
                             else
                             {
-                            return RedirectToAction("shoppingCarts", "ShoppingCart", new { OrderFail = OrderFail} );
-                        }
-                }
-            }
-
-
+                                item.Quantity = (int)p.Stock;
                                 OrderFail = $"{p.ProductName} not enough stock to proceed with order, current stock is {p.Stock}, quantity has been updated.";
                             }
                             HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
+
+                            return RedirectToAction("shoppingCarts", "ShoppingCart", new { OrderFail = OrderFail });
+                        }
+                }
+            }
 
             //ShoppingCart totalFee;
             string nonceFormClient = collections["payment_method_nonce"];
@@ -102,13 +97,18 @@ namespace LiquorLand.Controllers
             string zip = collections["postal_code"];
             string phone = collections["phone"];
 
+
+            var request = new TransactionRequest
+            {
+                Amount = amount,
+                PaymentMethodNonce = nonceFormClient,
                 Customer = new CustomerRequest
                 {
                     FirstName = firstName,
                     LastName = lastname,
                     Phone = phone,
                     Email = email,
-                    
+
                 },
                 BillingAddress = new AddressRequest
                 {
@@ -124,30 +124,20 @@ namespace LiquorLand.Controllers
                     LastName = lastname,
                     CountryName = country,
                     StreetAddress = address,
-                    PostalCode= zip,
+                    PostalCode = zip,
                 },
-            var request = new TransactionRequest
-            {
-                Amount = amount,
-                PaymentMethodNonce = nonceFormClient,
-                OrderId = "55501",
                 Options = new TransactionOptionsRequest
                 {
                     SubmitForSettlement = true
                 },
-                
+
             };
-         
+
             var gateway = _brain.GetGateway();
             Result<Transaction> result = gateway.Transaction.Sale(request);
-                return RedirectToAction("AddOrder", new { semaphoreRelease = true });
-
-
-            return RedirectToAction("GenerateToken");
-
+            if (result.Target.ProcessorResponseText == "Approved")
             {
-                //TempData["Success"] = "Transaction was succssful , Amount Charged: $" + result.Target.Amount;
-               return RedirectToAction("AddOrder");
+                return RedirectToAction("AddOrder");
             }
             return RedirectToAction("GenerateToken");
         }
