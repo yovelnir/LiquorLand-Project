@@ -47,12 +47,54 @@
                             </div>
                         </form>
                         </li>
+                        
+                        <li class="nav-item justify-self-center">
+                            <div class="d-flex"> 
+                                <span class="trigger"></span>
+                            <button class="btn btn-primary" onclick="openPopup()">notification
+                            </button>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
             <partial name="_UserPartial.cshtml" />
 
         </nav>
+        <!--for notification-->
+        <script>
+
+         $(document).ready(function () {
+            $('.notification').click(function () {
+                var serial = $(this).data('serial');
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("notifyBtnPreesed", "Home")",
+                    data: { serial: serial },
+                    success: function (response) {
+                   
+                        
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+            function openPopup() {
+                // Load the partial view into a modal-like popup
+                $.get('@Url.Action("OpenModelPopup", "Home")', function(data) {
+                    $('body').append(data); // Append popup content to the body
+                });
+            }
+
+            function closePopup() {
+                $('.popup-container').remove(); // Remove the popup from the DOM
+            }
+        </script>
+
+        <!--end-->
         <div class="Categories border-bottom box-shadow">
             <ul class="CategoryNav">
                 <li class="nav-item">
@@ -311,6 +353,7 @@
             });
         });
     </script>
+
 
 </body>
 </html>

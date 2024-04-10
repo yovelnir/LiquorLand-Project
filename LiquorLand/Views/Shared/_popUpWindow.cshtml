@@ -1,0 +1,85 @@
+﻿@model LiquorLand.ViewModels.productViewModel
+
+<link href="~/css/shoppingCart.css" rel="stylesheet" />
+<style>
+.popup-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 500px; /* Adjust width as needed */
+    height: 300px;
+}
+
+.popup-content {
+    text-align: center;
+    color: #333
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+</style>
+
+<!-- Views/Shared/_PopupContent.cshtml -->
+<div class="popup-container">
+    <div class="popup-content">
+        @if(ViewBag.flag)
+        {
+        @foreach (Product p in Model.all_products)
+        {
+            <div class="cart-item">
+                <a href="@Url.Action("productsShow", "Product", new { ProductName = p.ProductName })">
+                    <div class="item-details">
+                        <img src="@p.ProductImage" alt="Product Image" />
+                    </div>
+                </a>
+                <div class="item-info">
+                    <h3>@p.ProductName</h3>
+                </div>
+
+                <div class="item-price">$@p.ProductPrice</div>
+                <div>
+                        <input type="checkbox" class="remove-notification" id="@p.Serial" />
+                </div>
+            </div>
+
+        }
+        }
+        else
+        {
+        <h2>how long how loong</h2>
+        <p>@ViewBag.messege</p>
+        }
+        <button class="btn btn-primary" onclick="closePopup()">Close</button>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('.remove-notification').change(function () {
+            var Serial = $(this).prop('id');
+            var isChecked = $(this).is(':checked');
+            if (isChecked) {
+                $.ajax({
+                    url: "@Url.Action("removeFromList", "Home")",
+                    type: "POST",
+                    data: { Serial: Serial },
+                    success: function (response) {
+                        location.reload()
+                        console.log("success " + response.Serial);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+            
+        });
+    });
+  </script>

@@ -8,37 +8,31 @@ using System.Reflection.Emit;
 namespace LiquorLand.Models
 {
 
-    public class OrderContext : DbContext
+    public class notifyContext : DbContext
     {
-        public DbSet<Order> orders { get; set; }
+        public DbSet<notification> notify { get; set; }
 
-        public OrderContext(DbContextOptions<OrderContext> options)
+        public notifyContext(DbContextOptions<notifyContext> options)
         : base(options)
         {
         }
 
-        public OrderContext()
+        public notifyContext()
         {
         }
 
     }
-
-    public class Order
+    public class notification
     {
         [Key]
         [Required]
-        public string OrderId { get; set;}
+        public string? productId { get; set; }
 
         [Required]
-        public string orderItems { get; set; }
-
-        [Required]
-        public DateTime orderDate { get; set; }
-
         public string? userId { get; set; }
 
         [Required]
-        public decimal? totalPrice {  get; set; }
+        public Boolean BackInStock {  get; set; }
 
     }
 }

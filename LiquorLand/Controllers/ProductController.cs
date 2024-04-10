@@ -14,16 +14,19 @@ using System.Text.Json.Serialization;
 public class ProductController : Controller
 {
     private readonly ProductContext _productContext;
+    private readonly notifyContext _notifyContext;
 
-    public ProductController(ProductContext productContext)
+    public ProductController(ProductContext productContext, notifyContext notifyContext)
     {
         _productContext = productContext;
+        _notifyContext = notifyContext;
     }
 
     /*Product Page Loader*/
     public IActionResult productsShow(string ProductName)
     {
         Product? p;
+        notification? notify;
         if (ProductName == null)
         {
             string s = Request.Form["serial"];
@@ -34,6 +37,13 @@ public class ProductController : Controller
             try
             {
                 p = _productContext.Products.First(pr => pr.ProductName == ProductName);
+                notify = _notifyContext.notify.Find(p.Serial);
+                if(notify != null && p.Stock>0 && notify.BackInStock != true)
+                {
+                    notify.BackInStock=true;
+                    _notifyContext.notify.Update(notify);
+                    _notifyContext.SaveChangesAsync();
+                }
             }
             catch
             {
