@@ -57,29 +57,57 @@ namespace LiquorLand.Controllers
         {
             decimal amount = 0;
             ShoppingCart? shoppingCart = httpCart();
-            /*         var shoppingCartString = HttpContext.Session.GetString("cart");
 
-
-                     if (shoppingCartString != null)
-                     {
-                         shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartString); }*/
             if (shoppingCart != null)
             {
                 amount = shoppingCart.GetTotal();
             }
 
-            //ShoppingCart totalFee;
             string nonceFormClient = collections["payment_method_nonce"];
+            string firstName = collections["first_name"];
+            string lastname = collections["last_name"];
+            string country = collections["country"];
+            string address = collections["address"];
+            string email = collections["Email"];
+            string zip = collections["postal_code"];
+            string phone = collections["phone"];
+
+
             var request = new TransactionRequest
             {
-                Amount = amount,    
+                Amount = amount,
                 PaymentMethodNonce = nonceFormClient,
-                OrderId = "55501",
+                Customer = new CustomerRequest
+                {
+                    FirstName = firstName,
+                    LastName = lastname,
+                    Phone = phone,
+                    Email = email,
+                    
+                },
+                BillingAddress = new AddressRequest
+                {
+                    FirstName = firstName,
+                    LastName = lastname,
+                    CountryName = country,
+                    StreetAddress = address,
+                    PostalCode = zip,
+                },
+                ShippingAddress = new AddressRequest
+                {
+                    FirstName = firstName,
+                    LastName = lastname,
+                    CountryName = country,
+                    StreetAddress = address,
+                    PostalCode= zip,
+                },
                 Options = new TransactionOptionsRequest
                 {
                     SubmitForSettlement = true
-               }
+                },
+                
             };
+         
             var gateway = _brain.GetGateway();
             Result<Transaction> result = gateway.Transaction.Sale(request);
             if(result.Target.ProcessorResponseText == "Approved")
