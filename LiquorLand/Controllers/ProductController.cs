@@ -43,6 +43,16 @@ public class ProductController : Controller
                     notify.BackInStock=true;
                     _notifyContext.notify.Update(notify);
                     _notifyContext.SaveChangesAsync();
+
+                    string? noti;
+                    bool cookieExists = HttpContext.Request.Cookies.TryGetValue("notification", out noti);
+                    
+                    if(cookieExists)
+                    {
+                        int? countNoti = int.Parse(noti) + 1;
+                    }
+                    else
+                        HttpContext.Response.Cookies.Append("notification", "1");
                 }
             }
             catch

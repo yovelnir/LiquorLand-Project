@@ -118,7 +118,14 @@ namespace LiquorLand.Controllers
                 _notifyContext.notify.Update(notify);
             }
             await _notifyContext.SaveChangesAsync();
-            return RedirectToAction("Privacy");
+
+            int countNoti = int.Parse(HttpContext.Request.Cookies["notification"]) - 1;
+            if (countNoti == 0)
+                HttpContext.Response.Cookies.Append("notification", "", new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
+            else
+                HttpContext.Response.Cookies.Append("notification", countNoti.ToString());
+
+            return View("Policy");
         }
 
         public async Task<IActionResult> notifyBtnPreesed(string Serial)

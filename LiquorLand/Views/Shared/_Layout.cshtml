@@ -50,7 +50,10 @@
                         
                         <li class="nav-item justify-self-center">
                             <div class="d-flex"> 
-                                <span class="trigger"></span>
+                                @if ((User.IsInRole("User") || User.IsInRole("Admin")) && Context.Request.Cookies.ContainsKey("notification"))
+                                {
+                                    <span class="trigger"></span>
+                                }
                             <button class="btn btn-primary" onclick="openPopup()">notification
                             </button>
                             </div>
