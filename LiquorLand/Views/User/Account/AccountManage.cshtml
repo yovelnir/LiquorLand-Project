@@ -1,4 +1,15 @@
-﻿<link rel="stylesheet" href="~/css/accountmanager.css" asp-append-version="true" />
+﻿@using Microsoft.AspNetCore.Identity
+@using LiquorLand.Areas.Identity.Data
+@using LiquorLand.ViewModels
+
+@inject OrderContext OrderContext
+@inject UserManager<Users> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    List<Order> orders = OrderContext.orders.Where(order => order.userId == user.Id).ToList<Order>();
+}
+<link rel="stylesheet" href="~/css/accountmanager.css" asp-append-version="true" />
 
 <div class="profileContainer">
     <div class="profile">
@@ -22,10 +33,10 @@
             </div>
             <div class="tabContent">
                 <div class="tab-content" id="tab-content" aria-orientation="vertical">
-                    <div class="tab-pane active" id="user-details" role="tabpanel" aria-labelledby="vertical-tab-0"> <partial name="_ProfilePartial.cshtml" /> </div>
-                    <div class="tab-pane" id="shipping-address" role="tabpanel" aria-labelledby="vertical-tab-1"> <partial name="_ShippingAddress.cshtml" /> </div>
+                    <div class="tab-pane active" id="user-details" role="tabpanel" aria-labelledby="vertical-tab-0"> <partial name="_ProfilePartial.cshtml" for="@user" /> </div>
+                    <div class="tab-pane" id="shipping-address" role="tabpanel" aria-labelledby="vertical-tab-1"> <partial name="_ShippingAddress.cshtml" for="@user" /> </div>
                     <div class="tab-pane" id="change-password" role="tabpanel" aria-labelledby="vertical-tab-2"> <partial name="_ChangePassword.cshtml" /> </div>
-                    <div class="tab-pane" id="orders" role="tabpanel" aria-labelledby="vertical-tab-3">INSERT PAST ORDER HERE LATER</div>
+                    <div class="tab-pane" id="orders" role="tabpanel" aria-labelledby="vertical-tab-3"> <partial name="_UserOrders.cshtml" model="new ordersViewModel {orders = orders, TotalOrders = orders.Count(), userId = user.Id}" /> </div>
                 </div>
             </div>
         </div>

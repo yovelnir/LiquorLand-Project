@@ -33,7 +33,7 @@
     }
 </style>
 
-<div class="productManager table-responsive mt-5">
+<div class="productManager table-responsive mt-5" data-filter-url="@Url.Action("FilterProductManager", "Product")">
     <div class="filters mt-2 mb-2">
         <div class="form-check form-switch p-0">
             <div class="d-flex flex-column-reverse align-items-center gap-1">
@@ -109,9 +109,13 @@
                         <td>
                             <div class="d-flex flex-row gap-2">
                                 <a href=@Url.Action("Edit", "User", p) class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Product">Edit</a>
-                                <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Order Stock">Order</button>
-                                <div id="@p.Serial" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Product">
-                                    <button class="btn btn-danger removeitem" id="removeitem" data-bs-toggle="modal" data-bs-target="#removeItem">X</button>
+
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Order Stock">
+                                    <button class="btn btn-success orderStock" data-serial="@p.Serial" data-order-url="@Url.Action("OrderStock", "User")" data-bs-toggle="modal" data-bs-target="#stockModal">Order</button>
+                                </div>
+
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Product">
+                                    <button class="btn btn-danger removeitem" id="removeitem" data-remove-url="@Url.Action("RemoveProduct", "Product")" data-serial="@p.Serial" data-bs-toggle="modal" data-bs-target="#removeItem">X</button>
                                 </div>
                             </div>
                         </td>
@@ -146,124 +150,21 @@
     </div>
 </div>
 
-<script>
-    let tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    let tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-    var page = 1;
-    var productAmount = 10;
+<div class="modal fade" id="stockModal" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #31363F">
+            <div class="modal-header">
+                <h5 class="modal-title">Order More Stock</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="stockModalBody">
+            </div>
+            <div class="modal-footer align-items-center justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                <a id="orderBtn" class="btn btn-success">Order</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-    $(document).ready(function() {
-        function getFilterData(){
-            return {
-                serial: $('#serial').val(),
-                country: $('#country').val(),
-                maker: $('#maker').val(),
-                name: $('#name').val(),
-                instock: $('#instock').is(':checked'),
-                outstock: $('#outstock').is(':checked'),
-                category: $('#category').val(),
-                sub: $('#sub').val(),
-                price: $('#price').val(),
-                volume: $('#volume').val(),
-                alpercent: $('#alch').val(),
-                page: page,
-                productAmount: 10,
-                // Add other form parameters here
-            };
-        };
-
-        function applyFilter() {
-            // Determine the state of instock and outstock
-            var isInStock = $('#instock').is(':checked');
-            var outOfStock = $('#outstock').is(':checked');
-
-            // Disable or enable the opposite checkbox based on the current checkbox state
-            $('#instock').prop('disabled', outOfStock);
-            $('#outstock').prop('disabled', isInStock);
-
-            page = 1;
-            // Prepare the filter data
-            var filterData = getFilterData();
-
-            // Make the AJAX call
-            $.ajax({
-                url: '@Url.Action("FilterProductManager", "Product")', // Make sure this URL is correct in your context
-                type: 'GET',
-                data: {filterData: filterData},
-                success: function(result) {
-                    // Replace the product list with filtered data
-                    $('.productTable').html(result);
-                    $(".loadProducts").click(loadMore);
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    alert('Error: ' + error);
-                }
-            });
-        };
-        // Bind the applyFilter function to change events of the checkboxes
-        $('#instock, #outstock').change(applyFilter);
-
-        // Bind the applyFilter function to the click event of the button
-        $('#filterAll').click(applyFilter);
-
-        function loadMore(){
-            page++
-
-            filterData = getFilterData();
-
-            $.ajax({
-                url: '@Url.Action("FilterProductManager", "Product")',
-                type: 'Get',
-                data: {
-                    filterData: filterData,
-                },
-                success: function(result){
-                    $('.productTable').html(result);
-                    $(".loadProducts").click(loadMore);
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    alert('Error: ' + error);
-                }
-            })
-        };
-
-        $(".loadProducts").click(loadMore);
-
-        $('#clearAll').click(function() {
-            const inputs = document.querySelectorAll("input")
-            for(const input of inputs){
-                input.value = null;
-            }
-            page = 1;
-            $.ajax({
-                url: '@Url.Action("FilterProductManager", "Product")',
-                type: 'GET',
-                success: function(result) {
-                    // Replace the product list with filtered data
-                    $('.productTable').html(result);
-                    $(".loadProducts").click(loadMore);
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    alert('Error: ' + error);
-                }
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        $('.removeitem').click(function() {
-            const modalBody = document.getElementById("modalbody")
-            const modalRemove = document.getElementById("removebtn")
-            const serial = $(this).parent()[0].id
-            
-            modalBody.innerHTML = "<p>Are you sure you want to remove " + serial + "?</p>"
-
-            modalRemove.href = "@Url.Action("RemoveProduct", "Product", new {serial = "text"})".replace("text", serial)
-        });
-    });
-
-
-</script>
+<script src="~/js/productManager.js" />

@@ -41,7 +41,9 @@
                     <div class="d-flex flex-row gap-2">
                         <a href=@Url.Action("Edit", "User", p) class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Product">Edit</a>
                         <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Order Stock">Order</button>
-                        <button class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Product">X</button>
+                        <div data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Product">
+                            <button class="btn btn-danger removeitem" id="removeitem" data-remove-url="@Url.Action("RemoveProduct", "Product")" data-serial="@p.Serial" data-bs-toggle="modal" data-bs-target="#removeItem">X</button>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -57,7 +59,4 @@
     </tbody>
 </table>
 
-<script>
-    tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-</script>
+<script src="~/js/productManager.js" />

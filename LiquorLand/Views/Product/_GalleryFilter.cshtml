@@ -53,7 +53,7 @@
                                     <a asp-area="" asp-action="GenerateToken" asp-controller="BrainTree">
                                         <button class="btn btn-primary rounded-3 addToCartButton" data-serial="@p.Serial">Buy Now</button>
                                     </a>
-                                    <button class="btn btn-warning rounded-3 addToCartButton" data-serial="@p.Serial">Add to cart</button>
+                                    <button class="btn btn-warning rounded-3 addToCartButton" data-serial="@p.Serial" data-add-url="@Url.Action("addToCart", "ShoppingCart")">Add to cart</button>
                                 </div>
                             }
                         </div>
@@ -64,7 +64,7 @@
         @if (Model.total_products > Model.product_page * 10)
         {
             <div class="LoadMore">
-                <button class="btn btn-primary loadProducts">Load More Products</button>
+                <button class="btn btn-primary loadProducts" data-load-url="@Url.Action("loadMoreProducts", "Product")">Load More Products</button>
             </div>
         }
     </div>

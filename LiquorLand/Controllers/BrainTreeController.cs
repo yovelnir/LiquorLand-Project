@@ -18,7 +18,7 @@ namespace LiquorLand.Controllers
         public IBraintreeGate _brain {  get; set; }
         private readonly OrderContext _orderContext;
         private readonly UserManager<Users> _userManager;
-        public readonly ProductContext _productContext;
+        private readonly ProductContext _productContext;
 
         public BrainTreeController(IBraintreeGate brain , OrderContext orderContext, UserManager<Users> userManager, ProductContext productContext)
         {
@@ -112,7 +112,6 @@ namespace LiquorLand.Controllers
             Result<Transaction> result = gateway.Transaction.Sale(request);
             if(result.Target.ProcessorResponseText == "Approved")
             {
-                //TempData["Success"] = "Transaction was succssful , Amount Charged: $" + result.Target.Amount;
                return RedirectToAction("AddOrder");
             }
             return RedirectToAction("GenerateToken");
@@ -147,12 +146,14 @@ namespace LiquorLand.Controllers
             List<cartsItem> Items = new List<cartsItem>();
             Product product;
             Dictionary<string, int> orders = JsonConvert.DeserializeObject<Dictionary<string,int>>(order.orderItems);
-           foreach (KeyValuePair<string, int> entry in orders)
-           {
+
+            foreach (KeyValuePair<string, int> entry in orders)
+            {
                 product = _productContext.Products.Find(entry.Key);
                 Items.Add(new cartsItem(product));
                 Items.Find(item => item.cartItem.Equals(product)).Quantity = entry.Value;
             }
+
             ViewBag.totalPrice = order.totalPrice;
             ViewBag.orderNumber = order.OrderId;
             return View("successPayment", Items);

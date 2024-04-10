@@ -1,0 +1,84 @@
+﻿@model LiquorLand.ViewModels.ordersViewModel
+@using Newtonsoft.Json
+
+<table class="table table-active table-hover table-responsive">
+    <tbody>
+        <tr>
+            <th>Order Id</th>
+            <th>Products Ordered</th>
+            <th>Total Order Price</th>
+            <th>Order Date</th>
+        </tr>
+        @foreach (Order order in @Model.orders)
+        {
+            <tr class="showOrder" data-orderid="@order.OrderId">
+                <td>
+                    @order.OrderId
+                </td>
+                <td>
+                    @{
+                        var totalItems = JsonConvert.DeserializeObject<Dictionary<string, int>>(order.orderItems).Count().ToString();
+                    }
+                    @totalItems
+                </td>
+                <td>
+                    @order.totalPrice
+                </td>
+                <td>
+                    @order.orderDate
+                </td>
+            </tr>
+            <tr class="accordion">
+                <td class="orderedProducts" colspan=5>
+                    <div id="order-@order.OrderId" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+                        <div class="accordion-body" id="list-@order.OrderId">
+                            <!--Partial Ordered Products Will Load Here-->
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function(){
+        var currentOrder;
+        $(".showOrder").click(async function(){
+            var orderid = "#order-" + $(this).data("orderid");
+            if(currentOrder !== orderid){
+                $(currentOrder).collapse("hide");
+            }
+            else if(currentOrder === orderid){
+                $(currentOrder).collapse("hide");
+                $("#"+$(currentOrder).children()[0].id).html(" ");
+                currentOrder = null;
+                return;
+            }
+
+            currentOrder = orderid
+            $(orderid).parent().show();
+            $(orderid).collapse("show");
+            var order = $(this).data("orderid");
+
+            $.ajax({
+                url: "@Url.Action("GetUserOrder", "User")",
+                type: "GET",
+                data: {orderId: order},
+                success: function(result){
+                    $("#"+$(currentOrder).children()[0].id).html(result);
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr);
+    console.log(status);
+    console.log(error);
+                    alert('Error: ' + error);
+                }
+            })
+        })
+        $(".accordion-collapse").on("hidden.bs.collapse", function(){
+            $(this).parent().hide()
+            $("#"+$(this).children()[0].id).html(" ");
+        })
+    })
+</script>

@@ -176,6 +176,7 @@ namespace LiquorLand.Controllers
             return shoppingCarts(true);
         }
 
+        [Route("ShoppingCart")]
         public IActionResult shoppingCarts(bool partial = false)
         {
             var shoppingCartString = HttpContext.Session.GetString("cart");

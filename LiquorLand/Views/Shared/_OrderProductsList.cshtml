@@ -1,0 +1,42 @@
+﻿@model LiquorLand.ViewModels.productViewModel
+
+<table class="table table-secondary table-bordered table-responsive text-center" style="--bs-table-border-color: black;">
+    <tbody>
+        <tr>
+            <th>Product Serial</th>
+            <th></th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price per unit</th>
+            <th>Total Price</th>
+        </tr>
+
+        @foreach(Product p in Model.all_products)
+        {
+            int i = 0;
+            <tr>
+                <td>
+                    @p.Serial
+                </td>
+                <td>
+                    <a href="@Url.Action("productsShow", "Product", new {productName = p.ProductName})"><img class="custom-img" src="@p.ProductImage"/></a>
+                </td>
+                <td>
+                    @p.ProductName
+                </td>
+                <td>
+                    @ViewBag.quantity[i]
+                </td>
+                <td>
+                    @p.ProductPrice
+                </td>
+                <td>
+                    @{
+                        string totalPrice = (p.ProductPrice * ViewBag.quantity[i++]).ToString();
+                    }
+                    @totalPrice
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

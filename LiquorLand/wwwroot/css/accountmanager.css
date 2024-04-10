@@ -111,3 +111,13 @@ inputfield {
     width: 100%;
     border-radius: 0;
 }
+
+.orderedProducts{
+    display: none;
+}
+
+.custom-img {
+    width: 80px;
+    height: 130px;
+    object-fit: contain;
+}
