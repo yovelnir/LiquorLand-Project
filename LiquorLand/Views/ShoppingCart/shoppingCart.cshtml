@@ -8,11 +8,16 @@
 <div>
     <h1 class="shop_titel m-5">Your Shopping Cart</h1>
     <div class="cart-container">
+
         <div class="cart-items">
+            @if (ViewBag.OrderFail != null)
+            {
+                <div class="text-danger">@ViewBag.OrderFail</div>
+            }
             @if (Model.CartItems.Count == 0)
             {
                 <div class="cart-item" style="height: 100px;">
-                    YOUR CART IS EMPTY FOOL
+                    YOUR CART IS EMPTY
                 </div>
             }
             @foreach (cartsItem p in Model.CartItems)
@@ -29,14 +34,14 @@
 
                     <div class="quantity">
                         <button class="btn btn-link minus_button" id="minus_button" data-serial="@p.cartItem.Serial">-</button>
-                        <input data-serial="@p.cartItem.Serial" id="quantity-value" type="number" min="0" max="@p.cartItem.Stock" class="small-input quantity-value" value="@p.Quantity" data-quantity-url="@Url.Action("quantityChange", "ShoppingCart")"/>
+                        <input data-serial="@p.cartItem.Serial" id="quantity-value" type="number" min="0" max="@p.cartItem.Stock" class="small-input quantity-value" value="@p.Quantity" data-quantity-url="@Url.Action("quantityChange", "ShoppingCart")" />
                         <button class="btn btn-link plus_button" id="plus_button" data-serial="@p.cartItem.Serial" data-plus-url="@Url.Action("plusItem", "ShoppingCart")">+</button>
                     </div>
 
                     <div class="item-price">$@p.cartItem.ProductPrice</div>
                     <div class="total-price">$@(p.cartItem.ProductPrice * p.Quantity)</div>
                     <div>
-                        <button type="button" class="btn-close remove_item" data-serial="@p.cartItem.Serial" data-remove-url="@Url.Action("RemoveItem", "ShoppingCart")"/>
+                        <button type="button" class="btn-close remove_item" data-serial="@p.cartItem.Serial" data-remove-url="@Url.Action("RemoveItem", "ShoppingCart")" />
                     </div>
                 </div>
 
@@ -48,12 +53,12 @@
                         Total: $@Model.GetTotal()
                     </div>
                 </div>
-                @if(Model.GetTotal() != 0)
+                @if (Model.GetTotal() != 0)
                 {
                     <a asp-area="" asp-action="GenerateToken" asp-controller="BrainTree">
                         <button type="button" class="checkout-btn">Checkout</button>
                     </a>
-                } 
+                }
             </div>
         </div>
 

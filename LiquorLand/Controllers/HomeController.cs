@@ -39,7 +39,6 @@ namespace LiquorLand.Controllers
             return View(products);
         }
 
-        [Authorize(Roles = "Admin")]
         public IActionResult Privacy()
         {
             return View();

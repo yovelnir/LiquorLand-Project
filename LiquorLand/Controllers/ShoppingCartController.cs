@@ -95,7 +95,20 @@ namespace LiquorLand.Controllers
                 shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartString);
 
             if (shoppingCart != null)
+            {
+                for(int i = 0; i < shoppingCart.CartItems.Count(); i++)
+                {
+                    Product? p = _productContext.Products.Find(shoppingCart.CartItems[i].cartItem.Serial);
+                    if (p == null)
+                    {
+                        shoppingCart.RemoveFromCart(shoppingCart.CartItems[i].cartItem);
+                        i--;
+                    }
+                    HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
+                }
+
                 return shoppingCart.CartItems.Sum(items => items.Quantity);
+            }
             return 0;
         }
 
@@ -177,8 +190,13 @@ namespace LiquorLand.Controllers
         }
 
         [Route("ShoppingCart")]
-        public IActionResult shoppingCarts(bool partial = false)
+        public IActionResult shoppingCarts(bool partial = false, string? OrderFail = null)
         {
+            if(OrderFail != null)
+            {
+                ViewBag.OrderFail = OrderFail;
+            }
+
             var shoppingCartString = HttpContext.Session.GetString("cart");
             ShoppingCart? shoppingCart = null;
 

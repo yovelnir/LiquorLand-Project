@@ -28,7 +28,7 @@ input[type="number"] {
 
 <h4 class="text-light text-center">Product</h4>
 <hr />
-<div class="row justify-content-center">
+<div class="row justify-content-center w-100">
     <div class="col-md-4 justify-content-center align-items-center">
         <form asp-action="AddNewProduct" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger">@ViewBag.ErrorMessage</div>
@@ -113,7 +113,7 @@ input[type="number"] {
                 <span asp-validation-for="ProductImage" class="text-danger"></span>
             </div>
 
-            <div class="form-floating mb-1">
+            <div class="form-floating mb-1 mt-2 text-center">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
 
@@ -122,10 +122,6 @@ input[type="number"] {
     <div class=col-md-4>
         <img style="width:500px; height:500px; object-fit:contain" id="prodimg" src="https://media.istockphoto.com/id/1472933890/vector/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder.jpg?s=612x612&w=0&k=20&c=Rdn-lecwAj8ciQEccm0Ep2RX50FCuUJOaEM8qQjiLL0=" alt="Product Image" />
     </div>
-</div>
-
-<div class="align-items-center"> 
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

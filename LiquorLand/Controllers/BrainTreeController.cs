@@ -15,12 +15,12 @@ namespace LiquorLand.Controllers
 {
     public class BrainTreeController : Controller
     {
-        public IBraintreeGate _brain {  get; set; }
+        public IBraintreeGate _brain { get; set; }
         private readonly OrderContext _orderContext;
         private readonly UserManager<Users> _userManager;
         private readonly ProductContext _productContext;
 
-        public BrainTreeController(IBraintreeGate brain , OrderContext orderContext, UserManager<Users> userManager, ProductContext productContext)
+        public BrainTreeController(IBraintreeGate brain, OrderContext orderContext, UserManager<Users> userManager, ProductContext productContext)
         {
             _brain = brain;
             _orderContext = orderContext;
@@ -29,10 +29,10 @@ namespace LiquorLand.Controllers
         }
         public IActionResult GenerateToken()
         {
-            var gateway =_brain.GetGateway();
+            var gateway = _brain.GetGateway();
             var clientToken = gateway.ClientToken.Generate();
             ViewBag.ClientToken = clientToken;
- 
+
             return View();
         }
 
@@ -53,15 +53,40 @@ namespace LiquorLand.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult GenerateToken(IFormCollection collections)
+        public async Task<IActionResult> GenerateToken(IFormCollection collections)
         {
+
             decimal amount = 0;
             ShoppingCart? shoppingCart = httpCart();
 
             if (shoppingCart != null)
             {
                 amount = shoppingCart.GetTotal();
+
+                foreach (cartsItem item in shoppingCart.CartItems)
+                {
+                    Product? p = await _productContext.Products.FindAsync(item.cartItem.Serial);
+                    if (p != null)
+                        if (p.Stock < item.Quantity)
+                        {
+                            string? OrderFail;
+                            if (p.Stock == 0)
+                            {
+                                shoppingCart.CartItems.Remove(item);
+                                OrderFail = $"{p.ProductName} not enough stock to proceed with order, the product is out of stock, removed the item from the cart.";
+                            }
+                            else
+                            {
+                                item.Quantity = (int)p.Stock;
+                                OrderFail = $"{p.ProductName} not enough stock to proceed with order, current stock is {p.Stock}, quantity has been updated.";
+                            }
+                            HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(shoppingCart));
+
+                            return RedirectToAction("shoppingCarts", "ShoppingCart", new { OrderFail = OrderFail} );
+                        }
+                }
             }
+
 
             string nonceFormClient = collections["payment_method_nonce"];
             string firstName = collections["first_name"];
@@ -110,42 +135,48 @@ namespace LiquorLand.Controllers
          
             var gateway = _brain.GetGateway();
             Result<Transaction> result = gateway.Transaction.Sale(request);
-            if(result.Target.ProcessorResponseText == "Approved")
+
+            Console.WriteLine(result.IsSuccess());
+
+            if (result.IsSuccess())
             {
-               return RedirectToAction("AddOrder");
+                return RedirectToAction("AddOrder", new { semaphoreRelease = true });
             }
+
             return RedirectToAction("GenerateToken");
+
         }
 
-        public async Task<IActionResult> AddOrder()
+        public async Task<IActionResult> AddOrder(bool semaphoreRelease = false)
         {
             var user = await _userManager.GetUserAsync(User);
             ShoppingCart? shoppingCart = httpCart();
             Order? order = new Order();
-            order.OrderId = (_orderContext.orders.Count<Order>() > 0 ? _orderContext.orders.Count<Order>()+1 : 1).ToString();
+            order.OrderId = (_orderContext.orders.Count<Order>() > 0 ? _orderContext.orders.Count<Order>() + 1 : 1).ToString();
             order.totalPrice = shoppingCart.GetTotal();
             order.orderDate = DateTime.Now;
-            if(user != null)
+            if (user != null)
             {
                 order.userId = user.Id;
             }
 
             Dictionary<string, int> orderedItems = new Dictionary<string, int>();
-            foreach(cartsItem item in shoppingCart.CartItems)
+            foreach (cartsItem item in shoppingCart.CartItems)
             {
                 orderedItems.Add(item.cartItem.Serial, item.Quantity);
             }
             order.orderItems = JsonConvert.SerializeObject(orderedItems);
             await _orderContext.orders.AddAsync(order);
-            await _orderContext.SaveChangesAsync();
-            return RedirectToAction("removeCart", "ShoppingCart",order);
+            _orderContext.SaveChanges();
+
+            return RedirectToAction("removeCart", "ShoppingCart", order);
         }
 
         public IActionResult successPayment(Order order)
         {
             List<cartsItem> Items = new List<cartsItem>();
             Product product;
-            Dictionary<string, int> orders = JsonConvert.DeserializeObject<Dictionary<string,int>>(order.orderItems);
+            Dictionary<string, int> orders = JsonConvert.DeserializeObject<Dictionary<string, int>>(order.orderItems);
 
             foreach (KeyValuePair<string, int> entry in orders)
             {
